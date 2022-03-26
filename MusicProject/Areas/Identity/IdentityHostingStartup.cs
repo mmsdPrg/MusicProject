@@ -24,15 +24,16 @@ namespace MusicProject.Areas.Identity
                     .AddEntityFrameworkStores<DB_Music>();
 
 
-                services.Configure<IdentityOptions>(x =>
+                services.Configure<IdentityOptions>(z =>
                 {
+                    z.Password.RequiredLength = 8;
+                    z.Password.RequireNonAlphanumeric = false;
+                    z.Password.RequireLowercase = false;
+                    z.Password.RequireUppercase = false;
+                    z.Password.RequiredUniqueChars = 0;
+                    z.Lockout.DefaultLockoutTimeSpan = TimeSpan.FromSeconds(60);
+                    z.Lockout.MaxFailedAccessAttempts = 3;
 
-                    x.Password.RequireUppercase = false;
-                    x.Password.RequireNonAlphanumeric = false;
-                    x.Password.RequireLowercase = false;
-                    x.Password.RequireDigit = false;
-                    x.Password.RequiredUniqueChars = 0;
-                    x.Lockout.DefaultLockoutTimeSpan = TimeSpan.FromSeconds(60);
                 });
             });
 
