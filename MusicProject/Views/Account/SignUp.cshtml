@@ -14,7 +14,7 @@
         <div class="col-12">
             <div class="sign">
                 <div class="sign__content">
-                    <form asp-action="SignupConfirm" asp-controller="account" class="sign__form">
+                    <form id="Form" asp-action="SignupConfirm" asp-controller="account" class="sign__form">
                         <a href="/home/index" class="sign__logo">
                             <img src="~/Template/img/logo.svg" alt="">
                         </a>
@@ -35,10 +35,7 @@
                             <span asp-validation-for="Password"></span>
                         </div>
 
-                        <div class="sign__group sign__group--checkbox">
-                            <input id="remember" name="remember" type="checkbox" checked="checked">
-                            <label for="remember">من موافقم با <a href="privacy.html">سیاست حفظ حریم خصوصی</a></label>
-                        </div>
+                        
 
                         <button class="sign__btn" type="submit">ثبت نام</button>
 

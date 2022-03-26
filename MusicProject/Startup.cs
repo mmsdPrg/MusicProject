@@ -25,6 +25,7 @@ namespace MusicProject
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
+            services.AddSession();
             services.AddControllersWithViews();
             var map = new MapperConfiguration(z => z.AddProfile(typeof(ProfileMapper)));
             IMapper mapper = map.CreateMapper();
@@ -48,7 +49,7 @@ namespace MusicProject
             app.UseStaticFiles();
 
             app.UseRouting();
-
+            app.UseSession();
             app.UseAuthorization();
 
             app.UseEndpoints(endpoints =>

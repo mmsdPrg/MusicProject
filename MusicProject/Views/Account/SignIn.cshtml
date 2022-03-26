@@ -1,4 +1,4 @@
-﻿
+﻿@model SignInViewModel
 <div class="container-fluid">
     <div class="row row--grid">
         <!-- breadcrumb -->
@@ -14,25 +14,27 @@
             <div class="sign">
                 <div class="sign__content">
                     <!-- authorization form -->
-                    <form action="#" class="sign__form">
+                    <form asp-action="SignInConfirm" asp-controller="account" class ="sign__form">
                         <a href="index.html" class="sign__logo">
                             <img src="~/Template/img/logo.svg" alt="">
                         </a>
 
                         <div class="sign__group">
-                            <input type="text" class="sign__input" placeholder="ایمیل">
+                            <input asp-for="UserName" type="text" class="sign__input" placeholder="ایمیل">
+                            <span asp-validation-for="UserName"></span>
                         </div>
 
                         <div class="sign__group">
-                            <input type="password" class="sign__input" placeholder="رمز عبور">
+                            <input asp-for="Password" type="password" class="sign__input" placeholder="رمز عبور">
+                            <span asp-validation-for="Password"></span>
                         </div>
 
                         <div class="sign__group sign__group--checkbox">
-                            <input id="remember" name="remember" type="checkbox" checked="checked">
+                            <input asp-for="RememberMe" id="remember" name="remember" type="checkbox" checked="checked">
                             <label for="remember">مرا به یاد داشته باش</label>
                         </div>
 
-                        <button class="sign__btn" type="button">وارد شوید</button>
+                        <button class="sign__btn" type="submit">وارد شوید</button>
 
                         <span class="sign__delimiter">یا</span>
 

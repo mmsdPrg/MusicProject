@@ -14,9 +14,11 @@ namespace MusicProject.Controllers
     public class AccountController : Controller
     {
         UserManager<ApplicationUser> UserManager;
-        public AccountController(UserManager<ApplicationUser> _UserManager)
+        SignInManager<ApplicationUser> SignInManager;
+        public AccountController(UserManager<ApplicationUser> _UserManager, SignInManager<ApplicationUser> _SignInManager)
         {
             UserManager = _UserManager;
+            SignInManager = _SignInManager;
         }
 
         public IActionResult SignIn()
@@ -65,14 +67,35 @@ namespace MusicProject.Controllers
         public async Task<IActionResult> EmailConfirm(string id, string token)
         {
             ApplicationUser User = await UserManager.FindByIdAsync(id);
-          IdentityResult result=  await UserManager.ConfirmEmailAsync(User, token);
-            if (result.Succeeded) {
+            IdentityResult result = await UserManager.ConfirmEmailAsync(User, token);
+            if (result.Succeeded)
+            {
                 User.EmailConfirmed = true;
                 TempData["Suc"] = "ایمیل شما تایید شد";
             }
             else
-            {
                 TempData["Err"] = "ایمیل شما تایید نشده است";
+            return RedirectToAction("index", "home");
+        }
+        public async Task<IActionResult> SignInConfirm(SignInViewModel model)
+        {
+            ApplicationUser user = await UserManager.FindByEmailAsync(model.UserName);
+            if (user != null)
+            {
+                if (user.EmailConfirmed)
+                {
+                    Microsoft.AspNetCore.Identity.SignInResult result = await SignInManager.PasswordSignInAsync(user, model.Password, model.RememberMe, true);
+                    if (result.Succeeded)
+                    {
+                        TempData["Suc"] = "خوش آمدید";
+                    }
+                    else
+                        TempData["Err"] = "رمز شما اشتباه است";
+                }
+                else
+                {
+                    TempData["Err"] = "این کاربر وجود ندارد";
+                }
             }
             return RedirectToAction("index", "home");
         }
