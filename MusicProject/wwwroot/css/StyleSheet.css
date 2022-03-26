@@ -1,0 +1,10 @@
+﻿body {
+}
+.input-validation-error
+{
+    background-color:lightgoldenrodyellow;
+}
+.field-validation-error{
+
+    color:red;
+}
