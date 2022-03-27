@@ -1,0 +1,37 @@
+﻿
+@model ForgotPassViewModel
+<div class="container-fluid">
+    <div class="row row--grid">
+        <!-- breadcrumb -->
+        <div class="col-12">
+            <ul class="breadcrumb">
+                <li class="breadcrumb__item"><a href="index.html">صفحه اصلی</a></li>
+                <li class="breadcrumb__item breadcrumb__item--active">بازیابی رمز عبور</li>
+            </ul>
+        </div>
+        <!-- end breadcrumb -->
+        <!-- authorization form -->
+        <div class="col-12">
+            <div class="sign">
+                <div class="sign__content">
+                    <form asp-action="ForgotPassConfirmation" asp-controller="account" class="sign__form">
+                        <a href="index.html" class="sign__logo">
+                            <img src="~/Template/img/logo.svg" alt="">
+                        </a>
+
+                        <div class="sign__group">
+                            <input asp-for="password" type="password" class="sign__input" placeholder="رمز جدید">
+                            <span asp-validation-for="password"></span>
+                        </div>
+                        <div class="sign__group">
+                            <input asp-for="repassword" type="password" class="sign__input" placeholder="رمز جدید مجدد">
+                            <span asp-validation-for="repassword"></span>
+                        </div>
+                        <button class="sign__btn" type="submit">ارسال</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+        <!-- end authorization form -->
+    </div>
+</div>

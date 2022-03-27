@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using MusicProject.Areas.Identity.Data;
@@ -20,7 +21,7 @@ namespace MusicProject.Controllers
             UserManager = _UserManager;
             SignInManager = _SignInManager;
         }
-
+        #region SignUP&SignIN
         public IActionResult SignIn()
         {
             return View();
@@ -98,7 +99,7 @@ namespace MusicProject.Controllers
                 {
                     MailMessage mailMessage = new MailMessage("aspnetmvc123@gmail.com", user.Email);
                     string token = await UserManager.GenerateEmailConfirmationTokenAsync(user);
-                    var address = Url.Action("EmailConfirm", "account",new {id=user.Id,token=token },"https");
+                    var address = Url.Action("EmailConfirm", "account", new { id = user.Id, token = token }, "https");
                     mailMessage.Subject = "تایید ایمیل ";
                     mailMessage.Body = $"<h1>تایید ایمیل</h1>" +
                         $"<p><a href='{address}'>لینک فعالسازی </a><hr>با سلام برای تایید ایمیل خود روی لینک زیر کلیک کنید</p>";
@@ -122,7 +123,7 @@ namespace MusicProject.Controllers
             {
                 TempData["Err"] = "این کاربر وجود ندارد";
             }
-            return RedirectToAction("index", "home");
+            return RedirectToAction("SignIn", "account");
         }
         public async Task<IActionResult> SigningOut()
         {
@@ -137,5 +138,56 @@ namespace MusicProject.Controllers
             else
                 return Json(false);
         }
+
+        public async Task<IActionResult> ForgotPass(string UserName)
+        {
+            ApplicationUser user = await UserManager.FindByEmailAsync(UserName);
+            if (user != null)
+            {
+                string Token = await UserManager.GeneratePasswordResetTokenAsync(user);
+                MailMessage mailMessage = new MailMessage("aspnetmvc123@gmail.com", user.Email);
+                var address = Url.Action("ForgotPassConfirm", "account", new { id = user.Id, Token = Token }, "https");
+                mailMessage.Subject = "بازیابی رمز عبور";
+                mailMessage.Body = $"<h1> بازیابی رمز عبور</h1>" +
+                    $"<p><a href='{address}'>لینک بازیابی رمز عبور </a><hr>با سلام برای بازیابی رمز عبور خود روی لینک زیر کلیک کنید</p>";
+                mailMessage.IsBodyHtml = true;
+                SmtpClient smtp = new SmtpClient("smtp.gmail.com", 587);
+                smtp.Credentials = new System.Net.NetworkCredential("aspnetmvc123@gmail.com", "pP=-0987");
+                smtp.EnableSsl = true;
+                try
+                {
+                    smtp.Send(mailMessage);
+                    return Json("ایمیل بازیابی رمز برای شما ارسال شد");
+                }
+                catch (Exception)
+                {
+                    return Json("ایمیل بازیابی رمز ارسال نشد");
+                }
+            }
+            else
+                return Json("این کاربر وجود ندارد");
+        }
+        public IActionResult ForgotPassConfirm(string id, string token)
+        {
+            HttpContext.Session.SetString("idForgotUser", id);
+            HttpContext.Session.SetString("TokenForget", token);
+            return View();
+        }
+        public async Task<IActionResult> ForgotPassConfirmation(ForgotPassViewModel model)
+        {
+            var id = HttpContext.Session.GetString("idForgotUser");
+            var token = HttpContext.Session.GetString("TokenForget");
+            ApplicationUser user = await UserManager.FindByIdAsync(id);
+            IdentityResult result = await UserManager
+                   .ResetPasswordAsync(user, token, model.password);
+            if (result.Succeeded)
+            {
+                TempData["Suc"] = "رمز شما با موفقیت تغییر یافت";
+            }
+            return RedirectToAction("index", "home");
+
+        }
+
+        #endregion
     }
 }

@@ -20,8 +20,9 @@
                         </a>
 
                         <div class="sign__group">
-                            <input asp-for="UserName" type="text" class="sign__input" placeholder="ایمیل">
+                            <input id="EmailUser" asp-for="UserName" type="text" class="sign__input" placeholder="ایمیل">
                             <span asp-validation-for="UserName"></span>
+                            <label id="lblError" style="color:red"></label>
                         </div>
 
                         <div class="sign__group">
@@ -46,7 +47,7 @@
 
                         <span class="sign__text">حساب ندارید؟ <a href="/account/signup">ثبت نام!</a></span>
 
-                        <span class="sign__text"><a href="forgot.html">رمز خودرا فراموش کرده اید?</a></span>
+                        <span class="sign__text"><a id="ForgotPass" href="#">رمز خودرا فراموش کرده اید?</a></span>
                     </form>
                     <!-- end authorization form -->
                 </div>
@@ -55,3 +56,29 @@
         <!-- end sign in -->
     </div>
 </div>
+<script>
+    $(() => {
+
+        $(ForgotPass).click(function (event) {
+
+            let UserN = $(EmailUser).val();
+            if (UserN === "") {
+                $(lblError).html("ایمیل خود را برای پیدا کردن رمز خود وارد کنید")
+                event.preventDefault();
+            }else{
+                $.post('/Account/ForgotPass', { UserName: UserN }, value => {
+
+                    swal({
+                        icon: 'info',
+                        button: 'باشه',
+                        title: 'پیام از سیستم',
+                        text: value
+                    })
+
+                })
+            }
+
+        })
+
+    })
+</script>
