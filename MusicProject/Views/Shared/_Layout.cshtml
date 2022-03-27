@@ -458,6 +458,7 @@
 
     <label id="txtAlert" txtid="@TempData["Suc"]"></label>
     <label id="txtAlertErr" txtid="@TempData["Err"]"></label>
+    <label id="txtAlertinfo" txtid="@TempData["info"]"></label>
     @{
         if (TempData["Suc"] != null)
         {
@@ -482,6 +483,22 @@
                     var msg = $(txtAlertErr).attr('txtid');
                     swal({
                         icon: 'error',
+                        button: 'باشه',
+                        title: 'پیام از سیستم',
+                        text: msg
+                    })
+                })
+            </script>
+        }
+    }
+    @{
+        if (TempData["info"] != null)
+        {
+            <script>
+                $(() => {
+                    var msg = $(txtAlertinfo).attr('txtid');
+                    swal({
+                        icon: 'info',
                         button: 'باشه',
                         title: 'پیام از سیستم',
                         text: msg

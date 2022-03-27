@@ -90,21 +90,46 @@ namespace MusicProject.Controllers
                         TempData["Suc"] = "خوش آمدید";
                     }
                     else
+                    {
                         TempData["Err"] = "رمز شما اشتباه است";
+                    }
                 }
                 else
                 {
-                    TempData["Err"] = "این کاربر وجود ندارد";
+                    MailMessage mailMessage = new MailMessage("aspnetmvc123@gmail.com", user.Email);
+                    string token = await UserManager.GenerateEmailConfirmationTokenAsync(user);
+                    var address = Url.Action("EmailConfirm", "account",new {id=user.Id,token=token },"https");
+                    mailMessage.Subject = "تایید ایمیل ";
+                    mailMessage.Body = $"<h1>تایید ایمیل</h1>" +
+                        $"<p><a href='{address}'>لینک فعالسازی </a><hr>با سلام برای تایید ایمیل خود روی لینک زیر کلیک کنید</p>";
+                    mailMessage.IsBodyHtml = true;
+                    SmtpClient smtp = new SmtpClient("smtp.gmail.com", 587);
+                    smtp.Credentials = new System.Net.NetworkCredential("aspnetmvc123@gmail.com", "pP=-0987");
+                    smtp.EnableSsl = true;
+                    try
+                    {
+                        smtp.Send(mailMessage);
+                        TempData["info"] = "ایمیل تایید مجددا برای شما ارسال شد";
+                    }
+                    catch (Exception)
+                    {
+                        TempData["Err"] = "ایمیل تایید ارسال نشد";
+                    }
                 }
+
+            }
+            else
+            {
+                TempData["Err"] = "این کاربر وجود ندارد";
             }
             return RedirectToAction("index", "home");
         }
-        public async Task<IActionResult>SigningOut()
+        public async Task<IActionResult> SigningOut()
         {
             await SignInManager.SignOutAsync();
             return RedirectToAction("index", "home");
         }
-        public async Task< IActionResult> CheckUserName(string Email)
+        public async Task<IActionResult> CheckUserName(string Email)
         {
             ApplicationUser user = await UserManager.FindByEmailAsync(Email);
             if (user == null)
