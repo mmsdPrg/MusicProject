@@ -99,5 +99,18 @@ namespace MusicProject.Controllers
             }
             return RedirectToAction("index", "home");
         }
+        public async Task<IActionResult>SigningOut()
+        {
+            await SignInManager.SignOutAsync();
+            return RedirectToAction("index", "home");
+        }
+        public async Task< IActionResult> CheckUserName(string Email)
+        {
+            ApplicationUser user = await UserManager.FindByEmailAsync(Email);
+            if (user == null)
+                return Json(true);
+            else
+                return Json(false);
+        }
     }
 }
