@@ -10,5 +10,6 @@ namespace MusicProject.Areas.Identity.Data
     public class ApplicationUser : IdentityUser
     {
         public string Name { get; set; }
+        public string Family { get; set; }
     }
 }

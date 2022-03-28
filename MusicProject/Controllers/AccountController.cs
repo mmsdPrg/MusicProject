@@ -40,7 +40,8 @@ namespace MusicProject.Controllers
                     Email = model.Email,
                     Name = model.Name,
                     UserName = model.Email,
-                    EmailConfirmed = false
+                    EmailConfirmed = false,
+                    Family=model.Family
                 };
                 await UserManager.CreateAsync(user, model.Password);
                 string token = await UserManager.GenerateEmailConfirmationTokenAsync(user);
@@ -186,6 +187,10 @@ namespace MusicProject.Controllers
             }
             return RedirectToAction("index", "home");
 
+        }
+        public IActionResult UserProfile()
+        {
+            return View();
         }
 
         #endregion

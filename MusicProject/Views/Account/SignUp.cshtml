@@ -23,7 +23,10 @@
                             <input asp-for="Name" type="text" class="sign__input" placeholder="نام">
                             <span asp-validation-for="Name"></span>
                         </div>
-
+                        <div class="sign__group">
+                            <input asp-for="Family" type="text" class="sign__input" placeholder="نام خانوادگی">
+                            <span asp-validation-for="Family"></span>
+                        </div>
                         <div class="sign__group">
                             <input asp-for="Email" type="text" class="sign__input" placeholder="ایمیل">
                             <span asp-validation-for="Email"></span>
@@ -35,7 +38,7 @@
                             <span asp-validation-for="Password"></span>
                         </div>
 
-                        
+
 
                         <button class="sign__btn" type="submit">ثبت نام</button>
 

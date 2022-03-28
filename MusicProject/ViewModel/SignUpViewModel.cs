@@ -11,6 +11,8 @@ namespace MusicProject.ViewModel
     {
         [Required(ErrorMessage ="نام خود را وارد کنید")]
         public string Name { get; set; }
+        [Required(ErrorMessage = "نام خانوادگی خود را وارد کنید")]
+        public string Family { get; set; }
         [Remote("CheckUserName","account",ErrorMessage ="این کاربر با این ایمیل در سایت ثبت نام کرده است")]
         [Required(ErrorMessage = "ایمیل خود را وارد کنید")]
         [EmailAddress(ErrorMessage ="ایمیل به درستی وارد نشده است")]
