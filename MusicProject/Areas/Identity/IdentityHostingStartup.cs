@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Threading.Tasks;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.UI;
@@ -21,8 +22,10 @@ namespace MusicProject.Areas.Identity
                         context.Configuration.GetConnectionString("DB_MusicConnection")));
 
                 services.AddDefaultIdentity<ApplicationUser>(options => options.SignIn.RequireConfirmedAccount = true)
+                .AddRoles<IdentityRole>()
                     .AddEntityFrameworkStores<DB_Music>();
-
+                
+                services.AddAuthorization(z => z.AddPolicy("AdminAccess", x => x.RequireRole("Admin")));
 
                 services.Configure<IdentityOptions>(z =>
                 {
@@ -35,6 +38,28 @@ namespace MusicProject.Areas.Identity
                     z.Lockout.MaxFailedAccessAttempts = 3;
 
                 });
+
+                services.ConfigureApplicationCookie(z =>
+                {
+                    z.Events.OnRedirectToLogin = x =>
+                    {
+                        x.Response.Redirect("/home/index");
+                        return Task.CompletedTask;
+                    };
+                    z.Events.OnRedirectToAccessDenied = x =>
+                    {
+                        x.Response.Redirect("/home/index");
+                        return Task.CompletedTask;
+                    };
+                    z.Events.OnSigningOut = x =>
+                    {
+                        x.Response.Redirect("/home/index");
+                        return Task.CompletedTask;
+                    };
+
+                });
+
+
             });
 
             

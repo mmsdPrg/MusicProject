@@ -1,4 +1,7 @@
 ﻿using AutoMapper;
+using Microsoft.AspNetCore.Authentication;
+using Microsoft.AspNetCore.Authentication.Cookies;
+using Microsoft.AspNetCore.Authentication.Google;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
@@ -26,6 +29,7 @@ namespace MusicProject.Controllers
         {
             return View();
         }
+    
         public IActionResult SignUp()
         {
             return View();
@@ -153,6 +157,7 @@ namespace MusicProject.Controllers
                     $"<p><a href='{address}'>لینک بازیابی رمز عبور </a><hr>با سلام برای بازیابی رمز عبور خود روی لینک زیر کلیک کنید</p>";
                 mailMessage.IsBodyHtml = true;
                 SmtpClient smtp = new SmtpClient("smtp.gmail.com", 587);
+                smtp.UseDefaultCredentials = true;
                 smtp.Credentials = new System.Net.NetworkCredential("aspnetmvc123@gmail.com", "pP=-0987");
                 smtp.EnableSsl = true;
                 try
@@ -162,7 +167,7 @@ namespace MusicProject.Controllers
                 }
                 catch (Exception)
                 {
-                    return Json("ایمیل بازیابی رمز ارسال نشد");
+                    return Json("سرویس ارسال ایمیل با مشکل مواجه شده است به پشتیبانی مراجعه کنید");
                 }
             }
             else

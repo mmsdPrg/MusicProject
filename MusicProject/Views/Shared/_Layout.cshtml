@@ -45,7 +45,7 @@
             <nav class="header__nav">
                 @if (User.Identity.IsAuthenticated)
                 {
-                <a href="/account/UserProfile">پروفایل</a>
+                    <a href="/account/UserProfile">پروفایل</a>
                 }
                 <a href="about.html">درباره ما</a>
                 <a href="contacts.html">تماس با ما</a>
@@ -236,7 +236,7 @@
     <!-- main content -->
     <main class="main">
         <div class="container-fluid">
-            <div>
+            <div id="MainBody">
                 @RenderBody();
             </div>
 
@@ -296,7 +296,7 @@
                         <a href="about.html">درباره ما</a>
                         @if (User.Identity.IsAuthenticated)
                         {
-                        <a href="/account/UserProfile">پروفایل من</a>
+                            <a href="/account/UserProfile">پروفایل من</a>
                         }
                         <a href="pricing.html">خرید اشتراک</a>
                         <a href="contacts.html">تماس باما</a>
@@ -526,7 +526,7 @@
     <script src="~/Template/js/jquery.inputmask.min.js"></script>
     <script src="~/Template/js/plyr.min.js"></script>
     <script src="~/Template/js/main.js"></script>
-
+    <script src="//code.tidio.co/9jnsv72wukkwsxu2vuppzni0x5xdbc81.js" async></script>
 </body>
 
 </html>
