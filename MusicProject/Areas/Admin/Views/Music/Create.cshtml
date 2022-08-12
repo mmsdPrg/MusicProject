@@ -1,0 +1,423 @@
+﻿@{
+    ViewData["Title"] = "Create";
+    Layout = "~/Areas/Admin/Views/Shared/_Layout.cshtml";
+}
+@model AddMusicViewModel
+<style>
+    .progress .bar {
+        background: green;
+        width: 33%;
+        height: 30px;
+        .upload-button
+
+    {
+        background: #f0f0f0;
+        border-radius: 100px;
+        text-align: center;
+        position: relative;
+        width: 200px;
+        height: 200px;
+    }
+
+    .upload-button .label {
+        line-height: 200px;
+        pointer-events: none;
+        position: absolute;
+        left: 0;
+        top: 0;
+        width: 200px;
+        height: 200px;
+    }
+
+    .upload-button input {
+        opacity: 0;
+        cursor: pointer;
+        font-size: 200px;
+        width: 200px;
+        height: 200px;
+    }
+
+    .progress {
+        background: #f0f0f0;
+        margin-top: 30px;
+        display: none;
+        position: relative;
+    }
+
+        .progress .label {
+            line-height: 30px;
+            text-align: center;
+            position: absolute;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 30px;
+        }
+</style>
+<div class="content-wrapper">
+    <!-- Content Header (Page header) -->
+    <!-- Main content -->
+    <form asp-area="admin" asp-controller="Music" asp-action="CreateMusic" method="post" enctype="multipart/form-data">
+        <section class="content">
+            <div class="container-fluid">
+                <div class="row">
+                    <div class="col-12">
+                        <div class="card card-secondary">
+                            <div class="card-header">
+                                <h3 class="card-title">ثبت موسیقی جدید</h3>
+                            </div>
+                            <div class="card-body">
+                                <!-- Date dd/mm/yyyy -->
+                                <div class="form-group">
+                                    <label>اسم موسیقی :</label>
+
+                                    <div class="input-group">
+                                        <div class="input-group-prepend">
+                                            <span class="input-group-text"><i class="fa fa-edit"></i></span>
+                                        </div>
+                                        <input asp-for="Name" type="text" class="form-control">
+                                    </div>
+                                    <!-- /.input group -->
+                                </div>
+                                <!-- /.form group -->
+                                <!-- phone mask -->
+                                <div class="form-group">
+                                    <label>فایل موسیقی :</label>
+
+                                    <div class="input-group">
+                                        <div class="input-group-prepend">
+                                            <span class="input-group-text"><i class="fa fa-music"></i></span>
+                                        </div>
+                                        <input asp-for="MusicFile" id="mostanadPath" type="file" class="form-control">
+                                        <input type="button" onclick="UploadImage()" value="Upload" class="btn btn-outline-danger" id="btnUpLoad" />
+                                    </div>
+                                    <div class="progress">
+                                        <div class="progress-bar progress-bar-success progress-bar-striped
+    active" role="progressbar"
+                                             aria-valuemin="0" aria-valuemax="100" style="width:0%">
+                                            0%
+                                        </div>
+                                    </div>
+
+                                    <label id="ResultUpload"></label>
+                                    @*<div id="progress" class="progress"><div id="bar" class="bar"></div><div id="label" class="label">0%</div></div>*@
+                                    <!-- /.input group -->
+                                </div>
+                                <div class="form-group">
+                                    <label>کاور موسیقی:</label>
+
+                                    <div class="input-group">
+                                        <div class="input-group-prepend">
+                                            <span class="input-group-text"><i class="fa fa-image"></i></span>
+                                        </div>
+                                        <input asp-for="MusicCover" id="ImageCover" type="file" class="form-control">
+                                    </div>
+                                    <!-- /.input group -->
+                                </div>
+                                <div class="row">
+                                    <div class="col-2">
+                                        <button style="display:none" id="ShowImg" class="btn btn-success">نمایش عکس</button>
+                                    </div>
+                                    <div class="col-2">
+                                        <button style="display:none" id="DeleteImg" class="btn btn-danger">حذف عکس</button>
+                                    </div>
+                                </div>
+                                <!-- /.form group -->
+                                <!-- IP mask -->
+                                <div class="form-group">
+                                    <label> نام خواننده:</label>
+
+                                    <div class="input-group">
+                                        <div class="input-group-prepend">
+                                            <span class="input-group-text"><i class="fa fa-user"></i></span>
+                                        </div>
+                                        <input asp-for="Artist" type="text" class="form-control">
+                                    </div>
+                                    <!-- /.input group -->
+                                </div>
+                                <!-- /.form group -->
+                                <div class="form-group">
+                                    <label> توضیحات موسیقی:</label>
+
+                                    <div class="input-group">
+                                        <div class="input-group-prepend">
+                                            <span class="input-group-text"><i class="fa fa-edit"></i></span>
+                                        </div>
+                                        <textarea asp-for="Discription" type="text" class="form-control"></textarea>
+                                    </div>
+                                    <!-- /.input group -->
+                                </div>
+                            </div>
+                            <!-- /.card-body -->
+                        </div>
+                        <!-- /.card -->
+                    </div>
+                    <!-- /.col (left) -->
+                </div>
+                <!-- /.row -->
+            </div><!-- /.container-fluid -->
+        </section>
+        <button class="btn-btn success" type="submit">ایجاد موسیقی</button>
+    </form>
+    <!-- /.content -->
+</div>
+<script src="~/lib/jquery/dist/jquery.js"></script>
+<script src="~/lib/jquery/dist/jquery.min.js"></script>
+@*<script>
+    $(() => {
+        $(btnCancel).click(function() {
+            var input = document.getElementById(files);
+            console.log(input)
+            var files = input.files[0].name;
+
+            $.post('/admin/uploader/CancelFile', { FileName: files }, data => {
+                alert(data)
+            })
+        })
+    })
+</script>*@
+<script>
+    $(() => {
+
+        $(ShowImg).click(function(event) {
+            event.preventDefault();
+            let img = $(ImageCover).attr('Base64');
+            SwalToShowImage(img)
+        })
+        $(DeleteImg).click(function(event) {
+            event.preventDefault();
+            $(ImageCover).val('');
+            $(ShowImg).css('display', 'none')
+            $(DeleteImg).css('display', 'none')
+        })
+        $(ImageCover).change(function(event) {
+            const Size = event.target.files[0].size;
+            const Extention = event.target.files[0].name.split('.')[1];
+            const Img = event.target.files[0]
+            let SizeImg = bytesToSize(Size).split(' ');
+
+            console.log(SizeImg)
+            if (Extention.toLowerCase() == 'jpg' || Extention.toLowerCase() == 'png') {
+
+                if (SizeImg[1] == 'MB' && SizeImg[0] <= 2 || SizeImg[1] == 'KB') {
+                    let Reader = new FileReader();
+                    Reader.readAsDataURL(Img)
+                    Reader.onloadend = z => {
+                        SwalToShowImage(z.target.result)
+                        //document.getElementById(ImageCover).setAttribute('Base64',z.target.result)
+                        $(ImageCover).attr('Base64', z.target.result)
+                        $(ShowImg).css('display', 'block')
+                        $(DeleteImg).css('display', 'block')
+                    }
+
+
+                } else {
+                    alert('حجم عکس باید از 2 مگ کمتر باشد')
+                    $(this).val('');
+                    $(ShowImg).css('display', 'none')
+                    $(DeleteImg).css('display', 'none')
+
+                    return false;
+                }
+
+            } else {
+                alert('فرمت فایل درست نمی باشد')
+                $(this).val('');
+                $(ShowImg).css('display', 'none')
+                $(DeleteImg).css('display', 'none')
+
+                return false;
+            }
+
+
+
+
+        })
+
+    })
+    const units = ['bytes', 'KB', 'MB', 'GB', 'TB', 'PB', 'EB', 'ZB', 'YB'];
+    function niceBytes(x) {
+
+        let l = 0, n = parseInt(x, 10) || 0;
+
+        while (n >= 1024 && ++l) {
+            n = n / 1024;
+        }
+
+        return (n.toFixed(n < 10 && l > 0 ? 1 : 0) + ' ' + units[l]);
+    }
+    function bytesToSize(bytes) {
+        var sizes = ['Bytes', 'KB', 'MB', 'GB', 'TB'];
+        if (bytes == 0) return '0 Byte';
+        var i = parseInt(Math.floor(Math.log(bytes) / Math.log(1024)));
+        return Math.round(bytes / Math.pow(1024, i), 2) + ' ' + sizes[i];
+    }
+
+    function SwalToShowImage(ImgUrl) {
+        swal.fire({
+            title: 'عکس انتخابی',
+            button: 'باشه',
+            imageUrl: ImgUrl,
+            imageWidth: 400,
+            imageHeight: 200,
+        })
+    }
+</script>
+
+<script>
+    var UploadImage = function() {
+        var data = new FormData;
+        var file = $("#mostanadPath").get(0);
+        var files = file.files;
+        //File size control
+        //if (files[0].size >= 512000) {
+        //    $("#spnImageCartMlie").removeClass('hidden');
+        //    $("#spnImageCartMlie").text('The file size is more than 500 KB');
+        //    $("#spnImageCartMlie").css("color", "red");
+        //    return false;
+        //}
+
+
+        for (var i = 0; i < files.length; i++) {
+            data.append('filearray', files[i]);
+            data.append('filesize', files[i].size);
+        }
+        data.append('path', "img\\mostandat\\");
+
+        $.ajax({
+            //add here......
+            xhr: function() {
+                var xhr = new window.XMLHttpRequest();
+
+                xhr.upload.addEventListener("progress", function(evt) {
+                    if (evt.lengthComputable) {
+                        var percentComplete = evt.loaded / evt.total;
+                        percentComplete = parseInt(percentComplete * 100);
+
+                        $('.progress-bar').width(percentComplete + '%');
+                        $('.progress-bar').html(percentComplete + '%');
+
+                    }
+                }, false);
+
+                return xhr;
+            },
+
+
+            type: "post",
+            url: '/Home/UploadImageFile',
+            data: data,
+            contentType: false,
+            processData: false
+        }).done(function(result) {
+            if (result.status == "success") {
+                $("#ResultUpload").text("آپلود با موفقیت انجام شد.");
+                $("#divmessage").css("color", "green");
+                $("#divmessage").removeClass("hidden");
+
+
+                $("#newCartMlieImagePathName").val(result.imagename);
+            }
+
+        }).fail(function(result) {
+            if (result.status == "duplicate") {
+                $("#divmessage").css("color", "red");
+                $("#divmessage").removeClass("hidden");
+                $("#ResultUpload").text("فایل تکراری میباشد");
+            }
+            //if (result.status != "success") {
+            //    $("#divmessage").css("color", "red");
+            //    $("#divmessage").removeClass("hidden");
+            //    $("#ResultUpload").text("اشکالی در آپلود به وجود آمد");
+            //}
+        });
+
+
+    }
+</script>
+
+                <script>
+    $("#mostanadPath").change(function() {
+        var filename = this.files[0].name;
+        $("#spnImageCartMlie").html(filename);
+    });
+</script>
+
+
+<script>
+
+    $(mostanadPath).change(z => { 
+         $('.progress-bar').html("");
+        $('.progress-bar').css("width", "0");
+    })
+
+    var UploadImage = function() {
+
+        var data = new FormData;
+        var file = $("#mostanadPath").get(0);
+        var files = file.files;
+        //File size control
+        //if (files[0].size >= 512000) {
+        //    $("#spnImageCartMlie").removeClass('hidden');
+        //    $("#spnImageCartMlie").text('The file size is more than 500 KB');
+        //    $("#spnImageCartMlie").css("color", "red");
+        //    return false;
+        //}
+
+
+        for (var i = 0; i < files.length; i++) {
+            data.append('filearray', files[i]);
+            data.append('filesize', files[i].size);
+        }
+        data.append('path', "img\\mostandat\\");
+
+
+        console.log(data)
+        $.ajax({
+            //add here......
+            xhr: function() {
+                var xhr = new window.XMLHttpRequest();
+
+                xhr.upload.addEventListener("progress", function(evt) {
+                    if (evt.lengthComputable) {
+                        var percentComplete = evt.loaded / evt.total;
+                        percentComplete = parseInt(percentComplete * 100);
+
+                        $('.progress-bar').width(percentComplete + '%');
+                        $('.progress-bar').html(percentComplete + '%');
+
+                    }
+                }, false);
+
+                return xhr;
+            },
+            type: "POST",
+            url: "/Admin/Music/UploadMuiscFile",
+            data: data,
+            contentType: false,
+            processData: false
+        }).done(function(result) {
+            console.log(result)
+            if (result.status == "success") {
+                $("#divmessage").text("Upload was successful.");
+                $("#divmessage").css("color", "green");
+                $("#divmessage").removeClass("hidden");
+
+
+
+
+                $("#newCartMlieImagePathName").val(result.imagename);
+            }
+
+        }).fail(function(result) {
+            console.log(result)
+            if (result.status != "success") {
+                $("#divmessage").css("color", "red");
+                $("#divmessage").removeClass("hidden");
+                $("#divmessage").text("There was a problem uploading.");
+            }
+        });
+
+
+    }
+</script>

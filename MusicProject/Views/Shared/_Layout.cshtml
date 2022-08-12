@@ -3,6 +3,36 @@
 <html lang="fa">
 
 <head>
+
+    <style>
+    :root{
+  --clr-body-bg:#16151A ;
+  --clr-loader-bg: #217D54;
+}
+
+body {
+  background:var(--clr-body-bg);
+}
+
+.loader {
+  padding: 30px;
+  border: 10px solid var(--clr-loader-bg);
+  box-shadow: 0 0 5px 1px var(--clr-loader-bg);
+  border-right-color: var(--clr-body-bg);
+  border-radius: 50%;
+  animation: rotate 1s infinite linear;
+  position:absolute;
+  top:45%;
+  left:41%;
+}
+
+@@keyframes rotate {
+  100% {
+    transform: rotate(360deg);
+  }
+}
+
+</style>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 
@@ -34,6 +64,7 @@
 <body>
     @inject UserManager<ApplicationUser> userManager
     <!-- header -->
+    <div class='loader' style="display:none;z-index:3"></div>
     <header class="header">
         <div class="header__content">
             <div class="header__logo">
@@ -126,7 +157,7 @@
                         <div class="header__action header__action--signin">
                             <a class="header__action-btn" href="/account/UserProfile">
 
-                                <span>@($"{user.Name} عزیز")</span>
+                                <span id="LayoutUserName">@($"{user.Name} عزیز")</span>
                                 <svg style="transform: rotate(180deg);" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20,12a1,1,0,0,0-1-1H11.41l2.3-2.29a1,1,0,1,0-1.42-1.42l-4,4a1,1,0,0,0-.21.33,1,1,0,0,0,0,.76,1,1,0,0,0,.21.33l4,4a1,1,0,0,0,1.42,0,1,1,0,0,0,0-1.42L11.41,13H19A1,1,0,0,0,20,12ZM17,2H7A3,3,0,0,0,4,5V19a3,3,0,0,0,3,3H17a3,3,0,0,0,3-3V16a1,1,0,0,0-2,0v3a1,1,0,0,1-1,1H7a1,1,0,0,1-1-1V5A1,1,0,0,1,7,4H17a1,1,0,0,1,1,1V8a1,1,0,0,0,2,0V5A3,3,0,0,0,17,2Z" /></svg>
                             </a>
                         </div>
@@ -439,7 +470,7 @@
         <h4 class="sign__title">مثالی از اعلان ها</h4>
 
         <div class="sign__group sign__group--row">
-            <label class="sign__label">تمدید خودکار :</label>
+            <label  class="sign__label">تمدید خودکار :</label>
             <span class="sign__value">50,000 تومان</span>
         </div>
 
@@ -527,6 +558,7 @@
     <script src="~/Template/js/plyr.min.js"></script>
     <script src="~/Template/js/main.js"></script>
     <script src="//code.tidio.co/9jnsv72wukkwsxu2vuppzni0x5xdbc81.js" async></script>
+
 </body>
 
 </html>

@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using MusicProject.Areas.Identity.Data;
+using MusicProject.Data;
 using MusicProject.ViewModel;
 using System;
 using System.Collections.Generic;
@@ -19,10 +20,12 @@ namespace MusicProject.Controllers
     {
         UserManager<ApplicationUser> UserManager;
         SignInManager<ApplicationUser> SignInManager;
-        public AccountController(UserManager<ApplicationUser> _UserManager, SignInManager<ApplicationUser> _SignInManager)
+        DB_Music DB;
+        public AccountController(UserManager<ApplicationUser> _UserManager, SignInManager<ApplicationUser> _SignInManager, DB_Music _DB)
         {
             UserManager = _UserManager;
             SignInManager = _SignInManager;
+            DB = _DB;
         }
         #region SignUP&SignIN
         public IActionResult SignIn()
@@ -57,7 +60,8 @@ namespace MusicProject.Controllers
                 mailMessage.IsBodyHtml = true;
                 SmtpClient smtpClient = new SmtpClient("smtp.gmail.com", 587);
                 smtpClient.EnableSsl = true;
-                smtpClient.Credentials = new System.Net.NetworkCredential("aspnetmvc123@gmail.com", "pP=-0987");
+                smtpClient.Credentials = new System.Net.NetworkCredential("aspnetmvc123@gmail.com", "txbgumxwljwxpurj");
+
                 try
                 {
                     smtpClient.Send(mailMessage);
@@ -93,6 +97,10 @@ namespace MusicProject.Controllers
                     Microsoft.AspNetCore.Identity.SignInResult result = await SignInManager.PasswordSignInAsync(user, model.Password, model.RememberMe, true);
                     if (result.Succeeded)
                     {
+                        if(await UserManager.IsInRoleAsync(user, "Admin"))
+                        {
+                            return Redirect("/admin/home/index");
+                        }
                         TempData["Suc"] = "خوش آمدید";
                     }
                     else
@@ -110,7 +118,7 @@ namespace MusicProject.Controllers
                         $"<p><a href='{address}'>لینک فعالسازی </a><hr>با سلام برای تایید ایمیل خود روی لینک زیر کلیک کنید</p>";
                     mailMessage.IsBodyHtml = true;
                     SmtpClient smtp = new SmtpClient("smtp.gmail.com", 587);
-                    smtp.Credentials = new System.Net.NetworkCredential("aspnetmvc123@gmail.com", "pP=-0987");
+                    smtp.Credentials = new System.Net.NetworkCredential("aspnetmvc123@gmail.com", "txbgumxwljwxpurj");
                     smtp.EnableSsl = true;
                     try
                     {
@@ -157,9 +165,8 @@ namespace MusicProject.Controllers
                     $"<p><a href='{address}'>لینک بازیابی رمز عبور </a><hr>با سلام برای بازیابی رمز عبور خود روی لینک زیر کلیک کنید</p>";
                 mailMessage.IsBodyHtml = true;
                 SmtpClient smtp = new SmtpClient("smtp.gmail.com", 587);
-                smtp.UseDefaultCredentials = true;
-                smtp.Credentials = new System.Net.NetworkCredential("aspnetmvc123@gmail.com", "pP=-0987");
                 smtp.EnableSsl = true;
+                smtp.Credentials = new System.Net.NetworkCredential("aspnetmvc123@gmail.com","txbgumxwljwxpurj");
                 try
                 {
                     smtp.Send(mailMessage);
@@ -196,6 +203,43 @@ namespace MusicProject.Controllers
         public IActionResult UserProfile()
         {
             return View();
+        }
+        public async Task<JsonResult> EditProfile([FromBody]EditProfileViewModel model)
+        {
+            ApplicationUser user = await UserManager.FindByEmailAsync(model.Email);
+            if (model.OldPassword != null && model.NewPassword != null)
+            {
+                var IsOldPasswordTrue = await SignInManager.PasswordSignInAsync(user, model.OldPassword, false, false);
+                if (IsOldPasswordTrue.Succeeded)
+                {
+                    user.Name = model.Name;
+                    user.Family = model.Last;
+                    user.Email = model.Email;
+                    await UserManager.ChangePasswordAsync(user, model.OldPassword, model.NewPassword);
+                    var Result = await UserManager.UpdateAsync(user);
+                    if (Result.Succeeded)
+                    {
+                        return Json(new { Name = user.Name, family = user.Family });
+                    }
+                }else
+                {
+                    return Json(new { text = "رمز قدیمی اشتباه است" });
+                }
+            }
+            else
+            {
+                user.Email = model.Email;
+                user.Name = model.Name;
+                user.Family = model.Last;
+                var Result = await UserManager.UpdateAsync(user);
+                if (Result.Succeeded)
+                {
+                    return Json(new { Name = user.Name, family = user.Family,text="تغییرات اعمال شد" });
+                }
+            }
+            return Json(new {text="خطا در ویرایش"});
+
+
         }
 
         #endregion

@@ -18,7 +18,7 @@ body {
   animation: rotate 1s infinite linear;
   position:absolute;
   top:45%;
-  left:35%;
+  left:41%;
 }
 
 @@keyframes rotate {
@@ -86,7 +86,6 @@ body {
         <!-- end sign in -->
     </div>
 </div>
-<div class='loader' style="display:none;z-index:3"></div>
 <script>
     $(() => {
 
@@ -100,11 +99,12 @@ body {
             else {
                 $(lblError).html("")
                 $(".loader").css('display','block')
-                $(".LoadingForPass").css('visibility','hidden')
+                $(".main").css('opacity','11%')
                 setTimeout(() => { 
                   $.post('/Account/ForgotPass', { UserName: UserN }, value => {
+                $(".main").css('opacity','')
                 $(".loader").css('display','none')
-                $(".LoadingForPass").css('visibility','visible')
+
                     swal({
                         icon: 'info',
                         button: 'باشه',

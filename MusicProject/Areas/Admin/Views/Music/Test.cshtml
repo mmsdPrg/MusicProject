@@ -1,0 +1,141 @@
+﻿@{
+    ViewData["Title"] = "Test";
+    Layout = "~/Areas/Admin/Views/Shared/_Layout.cshtml";
+}
+
+<div class="container mt-4 col-2">
+
+    <table class="table table-bordered">
+
+        <tbody class="text-center">
+            <tr>
+                <td>
+                    <label class="btn btn-outline-info">
+                        Image selection
+                        <span class="oi oi-file h5 text-dark"></span>
+
+                    </label>
+                </td>
+
+            </tr>
+            <tr>
+                <td>
+                    <span class="text-center" id="spnImageCartMlie" style="color: black;font-size: 12px"></span>
+                    <input id="newCartMlieImagePathName" name="newCartMlieImagePathName" hidden />
+
+                </td>
+            </tr>
+
+            <tr>
+                <td>
+                    <input type="button" onclick="UploadImage()" value="Upload and display the image" class="btn btn-outline-danger" id="btnUpLoad" />
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <div id="divmessage" class="text-center hidden"></div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+
+    <input id="mostanadPath" type="file">
+
+</div>
+
+<div class="progress">
+    <div class="progress-bar progress-bar-success progress-bar-striped
+    active" role="progressbar"
+         aria-valuemin="0" aria-valuemax="100" style="width:0%">
+        0%
+    </div>
+</div>
+
+
+@*<script src="~/lib/jquery/dist/jquery.js"></script>
+<script src="~/lib/jquery/dist/jquery.min.js"></script>*@
+<script>
+    $("#mostanadPath").change(function() {
+        var filename = this.files[0].name;
+        $("#spnImageCartMlie").html(filename);
+    });
+</script>
+
+
+<script>
+
+    $(mostanadPath).change(z => { 
+         $('.progress-bar').html("");
+        $('.progress-bar').css("width", "0");
+    })
+
+    var UploadImage = function() {
+
+        var data = new FormData;
+        var file = $("#mostanadPath").get(0);
+        var files = file.files;
+        //File size control
+        //if (files[0].size >= 512000) {
+        //    $("#spnImageCartMlie").removeClass('hidden');
+        //    $("#spnImageCartMlie").text('The file size is more than 500 KB');
+        //    $("#spnImageCartMlie").css("color", "red");
+        //    return false;
+        //}
+
+
+        for (var i = 0; i < files.length; i++) {
+            data.append('filearray', files[i]);
+            data.append('filesize', files[i].size);
+        }
+        data.append('path', "img\\mostandat\\");
+
+
+        console.log(data)
+        $.ajax({
+            //add here......
+            xhr: function() {
+                var xhr = new window.XMLHttpRequest();
+
+                xhr.upload.addEventListener("progress", function(evt) {
+                    if (evt.lengthComputable) {
+                        var percentComplete = evt.loaded / evt.total;
+                        percentComplete = parseInt(percentComplete * 100);
+
+                        $('.progress-bar').width(percentComplete + '%');
+                        $('.progress-bar').html(percentComplete + '%');
+
+                    }
+                }, false);
+
+                return xhr;
+            },
+            type: "POST",
+            url: "/Admin/Music/UploadMuiscFile",
+            data: data,
+            contentType: false,
+            processData: false
+        }).done(function(result) {
+            console.log(result)
+            if (result.status == "success") {
+                $("#divmessage").text("Upload was successful.");
+                $("#divmessage").css("color", "green");
+                $("#divmessage").removeClass("hidden");
+
+
+
+
+                $("#newCartMlieImagePathName").val(result.imagename);
+            }
+
+        }).fail(function(result) {
+            console.log(result)
+            if (result.status != "success") {
+                $("#divmessage").css("color", "red");
+                $("#divmessage").removeClass("hidden");
+                $("#divmessage").text("There was a problem uploading.");
+            }
+        });
+
+
+    }
+</script>

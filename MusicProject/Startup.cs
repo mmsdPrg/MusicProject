@@ -9,6 +9,8 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using MusicProject.Areas.Admin.IRepository;
+using MusicProject.Areas.Admin.Repository;
 using MusicProject.Areas.Identity.Data;
 using MusicProject.Mapper;
 using System;
@@ -24,7 +26,7 @@ namespace MusicProject
         {
             Configuration = configuration;
         }
-
+        public static int Progress { get; set; }
         public IConfiguration Configuration { get; }
 
         // This method gets called by the runtime. Use this method to add services to the container.
@@ -40,7 +42,8 @@ namespace MusicProject
             var map = new MapperConfiguration(z => z.AddProfile(typeof(ProfileMapper)));
             IMapper mapper = map.CreateMapper();
             services.AddSingleton(mapper);
-           
+
+            services.AddScoped(typeof(IMusic), typeof(MusicRepository));
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -95,7 +98,7 @@ namespace MusicProject
             {
                 user = new ApplicationUser
                 {
-                    Email = "Admin",
+                    Email = "mohammadsaleh.masoud@gmail.com",
                     Name = "محمد صالح ",
                     Family = "مسعود",
                     UserName = "Admin",

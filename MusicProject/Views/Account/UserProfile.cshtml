@@ -1,13 +1,13 @@
-﻿
-@{
+﻿@{
     ViewData["Title"] = "UserProfile";
 }
 @inject UserManager<ApplicationUser> UserManeger
 
 
-@{ 
+@{
     ApplicationUser USER = await UserManeger.FindByNameAsync(User.Identity.Name);
 }
+
 <div class="container-fluid">
     <div class="row row--grid">
         <!-- breadcrumb -->
@@ -35,7 +35,7 @@
                         <img src="~/Template/img/avatar.svg" alt="">
                     </div>
                     <div class="profile__meta">
-                        <h3>@USER.Name  @USER.Family</h3>
+                        <h3 id="NameOFUser">@USER.Name  @USER.Family</h3>
                     </div>
                 </div>
 
@@ -47,9 +47,16 @@
                     <li class="nav-item">
                         <a class="nav-link" data-toggle="tab" href="#tab-4" role="tab" aria-controls="tab-4" aria-selected="false">تنظیمات</a>
                     </li>
+                    @if (USER.UserName == "Admin")
+                    {
+                          <li class="nav-item">
+                        <a class="nav-link"  href="/admin/home/index"  aria-selected="false">داشبورد ادمین</a>
+                    </li>
+                    }
+                  
                 </ul>
                 <!-- end tabs nav -->
-                
+
                 <a href="/account/SigningOut" class="profile__logout">
                     <span href="/account/SigningOut">خارج شوید</span>
                     <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M4,12a1,1,0,0,0,1,1h7.59l-2.3,2.29a1,1,0,0,0,0,1.42,1,1,0,0,0,1.42,0l4-4a1,1,0,0,0,.21-.33,1,1,0,0,0,0-.76,1,1,0,0,0-.21-.33l-4-4a1,1,0,1,0-1.42,1.42L12.59,11H5A1,1,0,0,0,4,12ZM17,2H7A3,3,0,0,0,4,5V8A1,1,0,0,0,6,8V5A1,1,0,0,1,7,4H17a1,1,0,0,1,1,1V19a1,1,0,0,1-1,1H7a1,1,0,0,1-1-1V16a1,1,0,0,0-2,0v3a3,3,0,0,0,3,3H17a3,3,0,0,0,3-3V5A3,3,0,0,0,17,2Z"></path></svg>
@@ -291,7 +298,7 @@
                                         <h4 class="sign__title">اطلاعات پروفایل</h4>
                                     </div>
 
-                                    
+
 
                                     <div class="col-12 col-md-6 col-lg-12 col-xl-6">
                                         <div class="sign__group">
@@ -315,7 +322,7 @@
                                     </div>
 
                                     <div class="col-12">
-                                        <button class="sign__btn" type="button">ذخیره</button>
+                                        <button id="btnChangeProfile" class="sign__btn" type="button">ذخیره</button>
                                     </div>
                                 </div>
                             </form>
@@ -349,22 +356,10 @@
                                             <input id="confirmpass" type="password" name="confirmpass" class="sign__input">
                                         </div>
                                     </div>
-
-                                    <div class="col-12 col-md-6 col-lg-12 col-xl-6">
-                                        <div class="sign__group">
-                                            <label class="sign__label" for="select">انتخاب</label>
-                                            <select name="select" id="select" class="sign__select">
-                                                <option value="0">آپشن</option>
-                                                <option value="1">آپشن 1</option>
-                                                <option value="2">آپشن 2</option>
-                                                <option value="3">آپشن 3</option>
-                                            </select>
-                                        </div>
-                                    </div>
-
                                     <div class="col-12">
-                                        <button class="sign__btn" type="button">تغییر</button>
+                                        <button id="ConfirmPassBtn" class="sign__btn" type="button">تغییر</button>
                                     </div>
+                                    <label style="color:red" id="ErrorMsg"></label>
                                 </div>
                             </form>
                         </div>
@@ -376,3 +371,91 @@
         </div>
     </div>
 </div>
+<script>
+
+    document.getElementById('btnChangeProfile').addEventListener('click', ChangeProfile)
+    document.getElementById('ConfirmPassBtn').addEventListener('click', ChangePassword)
+    const Email = document.getElementById('email')
+    const FirstName = document.getElementById('firstname')
+    const lastname = document.getElementById('lastname')
+    const OldPass = document.getElementById('oldpass')
+    const NewPass = document.getElementById('newpass')
+    const ConfirmNewPass = document.getElementById('confirmpass')
+
+    function ChangePassword() {
+        if (NewPass.value != ConfirmNewPass.value || NewPass.value.length < 8 || OldPass == "") {
+            document.getElementById('ErrorMsg').innerHTML = "تایید رمز جدید میبایست با رمز جدید یکسان باشد<br>رمز باید بیشتر از 8 رقم باشد<br>رمز قدیمی وارد نشده است"
+            //event.preventDefault();
+            return false;
+        } else {
+        document.querySelector('.loader').style.display = 'block';
+        document.querySelector('.main').style.opacity = '11%'
+        document.getElementById('ErrorMsg').innerHTML = ""
+
+            const OptionHeader = {
+                method: 'POST',
+                headers: { 'content-type': 'application/json' },
+                body: JSON.stringify({ Email: Email.value, Name: FirstName.value, Last: lastname.value, OldPassword: OldPass.value, NewPassword: NewPass.value })
+            }
+             fetch("@Url.Action("EditProfile","Account")", OptionHeader).then(res => res.json()).then(data => {
+            document.querySelector('.loader').style.display = 'none';
+            document.querySelector('.main').style.opacity = ''
+
+            if (data.name != null) {
+                document.getElementById("NameOFUser").innerHTML = `${data.name} ${data.family}`
+                document.getElementById("LayoutUserName").innerHTML = `${data.name} عزیز`
+                swal({
+                    icon: "success",
+                    title: "پیام",
+                    text: "تغییرات اعمال شد",
+                    button: "باشه"
+                })
+            } else {
+                swal({
+                    icon: "error",
+                    title: "پیام",
+                    text: data.text,
+                    button: "باشه"
+                })
+            }
+
+        })
+
+        }
+    }
+
+    function ChangeProfile() {
+        document.getElementById('ErrorMsg').innerHTML = ""
+        document.querySelector('.loader').style.display = 'block';
+        document.querySelector('.main').style.opacity = '11%'
+        const OptionHeader = {
+            method: 'POST',
+            headers: { 'content-type': 'application/json' },
+            body: JSON.stringify({ Email: Email.value, Name: FirstName.value, Last: lastname.value })
+        }
+        fetch("@Url.Action("EditProfile","Account")", OptionHeader).then(res => res.json()).then(data => {
+            document.querySelector('.loader').style.display = 'none';
+            document.querySelector('.main').style.opacity = ''
+
+            if (data.name != null) {
+                document.getElementById("NameOFUser").innerHTML = `${data.name} ${data.family}`
+                document.getElementById("LayoutUserName").innerHTML = `${data.name} عزیز`
+                swal({
+                    icon: "success",
+                    title: "پیام",
+                    text: "تغییرات اعمال شد",
+                    button: "باشه"
+                })
+            } else {
+                swal({
+                    icon: "error",
+                    title: "پیام",
+                    text: data.text,
+                    button: "باشه"
+                })
+            }
+
+        })
+
+    }
+</script>

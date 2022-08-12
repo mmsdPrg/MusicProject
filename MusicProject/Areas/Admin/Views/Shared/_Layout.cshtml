@@ -1,40 +1,42 @@
 ﻿
 <!DOCTYPE html>
-<html lang="en">
+<html>
 <head>
   <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <title>پنل مدیریت | داشبورد اول</title>
+  <!-- Tell the browser to be responsive to screen width -->
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <meta http-equiv="x-ua-compatible" content="ie=edge">
-
-  <title>پنل مدیریت | داشبورد سوم</title>
-
-  <!-- Font Awesome Icons -->
+  <!-- Font Awesome -->
   <link rel="stylesheet" href="~/AdminTemplate/plugins/font-awesome/css/font-awesome.min.css">
-  <!-- IonIcons -->
-  <link rel="stylesheet" href="http://code.ionicframework.com/ionicons/2.0.1/css/ionicons.min.css">
+  <!-- Ionicons -->
+  <link rel="stylesheet" href="https://code.ionicframework.com/ionicons/2.0.1/css/ionicons.min.css">
   <!-- Theme style -->
   <link rel="stylesheet" href="~/AdminTemplate/dist/css/adminlte.min.css">
+  <!-- iCheck -->
+  <link rel="stylesheet" href="~/AdminTemplate/plugins/iCheck/flat/blue.css">
+  <!-- Morris chart -->
+  <link rel="stylesheet" href="~/AdminTemplate/plugins/morris/morris.css">
+  <!-- jvectormap -->
+  <link rel="stylesheet" href="~/AdminTemplate/plugins/jvectormap/jquery-jvectormap-1.2.2.css">
+  <!-- Date Picker -->
+  <link rel="stylesheet" href="~/AdminTemplate/plugins/datepicker/datepicker3.css">
+  <!-- Daterange picker -->
+  <link rel="stylesheet" href="~/AdminTemplate/plugins/daterangepicker/daterangepicker-bs3.css">
+  <!-- bootstrap wysihtml5 - text editor -->
+  <link rel="stylesheet" href="~/AdminTemplate/plugins/bootstrap-wysihtml5/bootstrap3-wysihtml5.min.css">
   <!-- Google Font: Source Sans Pro -->
   <link href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,400i,700" rel="stylesheet">
-
   <!-- bootstrap rtl -->
   <link rel="stylesheet" href="~/AdminTemplate/dist/css/bootstrap-rtl.min.css">
   <!-- template rtl version -->
   <link rel="stylesheet" href="~/AdminTemplate/dist/css/custom-style.css">
-
+  <script src="~/lib/jquery/dist/jquery.js"></script>
+<script src="~/lib/jquery/dist/jquery.min.js"></script>
 </head>
-<!--
-BODY TAG OPTIONS:
-=================
-Apply one or more of the following classes to to the body tag
-to get the desired effect
-|---------------------------------------------------------|
-|LAYOUT OPTIONS | sidebar-collapse                        |
-|               | sidebar-mini                            |
-|---------------------------------------------------------|
--->
 <body class="hold-transition sidebar-mini">
 <div class="wrapper">
+
   <!-- Navbar -->
   <nav class="main-header navbar navbar-expand bg-white navbar-light border-bottom">
     <!-- Left navbar links -->
@@ -167,8 +169,8 @@ to get the desired effect
     </a>
 
     <!-- Sidebar -->
-    <div class="sidebar">
-      <div>
+    <div class="sidebar" style="direction: ltr">
+      <div style="direction: rtl">
         <!-- Sidebar user panel (optional) -->
         <div class="user-panel mt-3 pb-3 mb-3 d-flex">
           <div class="image">
@@ -194,7 +196,7 @@ to get the desired effect
               </a>
               <ul class="nav nav-treeview">
                 <li class="nav-item">
-                  <a href="./index.html" class="nav-link">
+                  <a href="./index.html" class="nav-link active">
                     <i class="fa fa-circle-o nav-icon"></i>
                     <p>داشبورد اول</p>
                   </a>
@@ -206,7 +208,7 @@ to get the desired effect
                   </a>
                 </li>
                 <li class="nav-item">
-                  <a href="./index3.html" class="nav-link active">
+                  <a href="./index3.html" class="nav-link">
                     <i class="fa fa-circle-o nav-icon"></i>
                     <p>داشبورد سوم</p>
                   </a>
@@ -226,15 +228,15 @@ to get the desired effect
               <a href="#" class="nav-link">
                 <i class="nav-icon fa fa-pie-chart"></i>
                 <p>
-                  چارت‌ها
+                  موسیقی
                   <i class="right fa fa-angle-left"></i>
                 </p>
               </a>
               <ul class="nav nav-treeview">
                 <li class="nav-item">
-                  <a href="pages/charts/chartjs.html" class="nav-link">
+                  <a href="/admin/music/create" class="nav-link">
                     <i class="fa fa-circle-o nav-icon"></i>
-                    <p>نمودار ChartJS</p>
+                    <p>اضافه کردن موسیقی</p>
                   </a>
                 </li>
                 <li class="nav-item">
@@ -486,312 +488,64 @@ to get the desired effect
     </div>
     <!-- /.sidebar -->
   </aside>
-
+    <div>
+        @RenderBody()
+    </div>
   <!-- Content Wrapper. Contains page content -->
-  <div class="content-wrapper">
-    <!-- Content Header (Page header) -->
-    <div class="content-header">
-      <div class="container-fluid">
-        <div class="row mb-2">
-          <div class="col-sm-6">
-            <h1 class="m-0 text-dark">داشبورد سوم</h1>
-          </div><!-- /.col -->
-          <div class="col-sm-6">
-            <ol class="breadcrumb float-sm-left">
-              <li class="breadcrumb-item"><a href="#">خانه</a></li>
-              <li class="breadcrumb-item active">داشبورد سوم</li>
-            </ol>
-          </div><!-- /.col -->
-        </div><!-- /.row -->
-      </div><!-- /.container-fluid -->
-    </div>
-    <!-- /.content-header -->
-
-    <!-- Main content -->
-    <div class="content">
-      <div class="container-fluid">
-        <div class="row">
-          <div class="col-lg-6">
-            <div class="card">
-              <div class="card-header no-border">
-                <div class="d-flex justify-content-between">
-                  <h3 class="card-title">کاربران آنلاین</h3>
-                  <a href="javascript:void(0);">مشاهده گزارش</a>
-                </div>
-              </div>
-              <div class="card-body">
-                <div class="d-flex">
-                  <p class="d-flex flex-column">
-                    <span class="text-bold text-lg">820</span>
-                    <span>بازدید کننده در طول زمان</span>
-                  </p>
-                  <p class="mr-auto d-flex flex-column text-right">
-                    <span class="text-success">
-                      <i class="fa fa-arrow-up"></i> 12.5%
-                    </span>
-                    <span class="text-muted">از هفته گذشته</span>
-                  </p>
-                </div>
-                <!-- /.d-flex -->
-
-                <div class="position-relative mb-4">
-                  <canvas id="visitors-chart" height="200"></canvas>
-                </div>
-
-                <div class="d-flex flex-row justify-content-end">
-                  <span class="ml-2">
-                    <i class="fa fa-square text-primary"></i> این هفته
-                  </span>
-
-                  <span>
-                    <i class="fa fa-square text-gray"></i> هفته گذشته
-                  </span>
-                </div>
-              </div>
-            </div>
-            <!-- /.card -->
-
-            <div class="card">
-              <div class="card-header no-border">
-                <h3 class="card-title">محصولات</h3>
-                <div class="card-tools">
-                  <a href="#" class="btn btn-tool btn-sm">
-                    <i class="fa fa-download"></i>
-                  </a>
-                  <a href="#" class="btn btn-tool btn-sm">
-                    <i class="fa fa-bars"></i>
-                  </a>
-                </div>
-              </div>
-              <div class="card-body p-0">
-                <table class="table table-striped table-valign-middle">
-                  <thead>
-                  <tr>
-                    <th>محصولات</th>
-                    <th>قیمت</th>
-                    <th>فروش</th>
-                    <th>بیشتر</th>
-                  </tr>
-                  </thead>
-                  <tbody>
-                  <tr>
-                    <td>
-                      <img src="~/AdminTemplate/dist/img/default-150x150.png" alt="Product 1" class="img-circle img-size-32 mr-2">
-                      تلویزیون هوشمند
-                    </td>
-                    <td>13 تومان</td>
-                    <td>
-                      <small class="text-success mr-1">
-                        <i class="fa fa-arrow-up"></i>
-                        12%
-                      </small>
-                      12,000 فروش
-                    </td>
-                    <td>
-                      <a href="#" class="text-muted">
-                        <i class="fa fa-search"></i>
-                      </a>
-                    </td>
-                  </tr>
-                  <tr>
-                    <td>
-                      <img src="~/AdminTemplate/dist/img/default-150x150.png" alt="Product 1" class="img-circle img-size-32 mr-2">
-                      محصول ایکس
-                    </td>
-                    <td>29 تومان</td>
-                    <td>
-                      <small class="text-warning mr-1">
-                        <i class="fa fa-arrow-down"></i>
-                        0.5%
-                      </small>
-                      123,234 فروش
-                    </td>
-                    <td>
-                      <a href="#" class="text-muted">
-                        <i class="fa fa-search"></i>
-                      </a>
-                    </td>
-                  </tr>
-                  <tr>
-                    <td>
-                      <img src="~/AdminTemplate/dist/img/default-150x150.png" alt="Product 1" class="img-circle img-size-32 mr-2">
-                      محصول پرفروش
-                    </td>
-                    <td>1,230 تومان</td>
-                    <td>
-                      <small class="text-danger mr-1">
-                        <i class="fa fa-arrow-down"></i>
-                        3%
-                      </small>
-                      198 فروش
-                    </td>
-                    <td>
-                      <a href="#" class="text-muted">
-                        <i class="fa fa-search"></i>
-                      </a>
-                    </td>
-                  </tr>
-                  <tr>
-                    <td>
-                      <img src="~/AdminTemplate/dist/img/default-150x150.png" alt="Product 1" class="img-circle img-size-32 mr-2">
-                      محصول جدید
-                      <span class="badge bg-danger">جدید</span>
-                    </td>
-                    <td>199 تومان</td>
-                    <td>
-                      <small class="text-success mr-1">
-                        <i class="fa fa-arrow-up"></i>
-                        63%
-                      </small>
-                      87 فروش
-                    </td>
-                    <td>
-                      <a href="#" class="text-muted">
-                        <i class="fa fa-search"></i>
-                      </a>
-                    </td>
-                  </tr>
-                  </tbody>
-                </table>
-              </div>
-            </div>
-            <!-- /.card -->
-          </div>
-          <!-- /.col-md-6 -->
-          <div class="col-lg-6">
-            <div class="card">
-              <div class="card-header no-border">
-                <div class="d-flex justify-content-between">
-                  <h3 class="card-title">فروش</h3>
-                  <a href="javascript:void(0);">مشاهده گزارش</a>
-                </div>
-              </div>
-              <div class="card-body">
-                <div class="d-flex">
-                  <p class="d-flex flex-column">
-                    <span class="text-bold text-lg">تومان 18,230.00</span>
-                    <span>فروش در طول زمان</span>
-                  </p>
-                  <p class="mr-auto d-flex flex-column text-right">
-                    <span class="text-success">
-                      <i class="fa fa-arrow-up"></i> 33.1%
-                    </span>
-                    <span class="text-muted">از ماه گذشته</span>
-                  </p>
-                </div>
-                <!-- /.d-flex -->
-
-                <div class="position-relative mb-4">
-                  <canvas id="sales-chart" height="200"></canvas>
-                </div>
-
-                <div class="d-flex flex-row justify-content-end">
-                  <span class="ml-2">
-                    <i class="fa fa-square text-primary"></i> امسال
-                  </span>
-
-                  <span>
-                    <i class="fa fa-square text-gray"></i> سال گذشته
-                  </span>
-                </div>
-              </div>
-            </div>
-            <!-- /.card -->
-
-            <div class="card">
-              <div class="card-header no-border">
-                <h3 class="card-title">بررسی اجمالی فروشگاه آنلاین</h3>
-                <div class="card-tools">
-                  <a href="#" class="btn btn-sm btn-tool">
-                    <i class="fa fa-download"></i>
-                  </a>
-                  <a href="#" class="btn btn-sm btn-tool">
-                    <i class="fa fa-bars"></i>
-                  </a>
-                </div>
-              </div>
-              <div class="card-body">
-                <div class="d-flex justify-content-between align-items-center border-bottom mb-3">
-                  <p class="text-success text-xl">
-                    <i class="ion ion-ios-refresh-empty"></i>
-                  </p>
-                  <p class="d-flex flex-column text-right">
-                    <span class="font-weight-bold">
-                      <i class="ion ion-android-arrow-up text-success"></i> 12%
-                    </span>
-                    <span class="text-muted">نرخ تبدیل</span>
-                  </p>
-                </div>
-                <!-- /.d-flex -->
-                <div class="d-flex justify-content-between align-items-center border-bottom mb-3">
-                  <p class="text-warning text-xl">
-                    <i class="ion ion-ios-cart-outline"></i>
-                  </p>
-                  <p class="d-flex flex-column text-right">
-                    <span class="font-weight-bold">
-                      <i class="ion ion-android-arrow-up text-warning"></i> 0.8%
-                    </span>
-                    <span class="text-muted">نرخ فروش</span>
-                  </p>
-                </div>
-                <!-- /.d-flex -->
-                <div class="d-flex justify-content-between align-items-center mb-0">
-                  <p class="text-danger text-xl">
-                    <i class="ion ion-ios-people-outline"></i>
-                  </p>
-                  <p class="d-flex flex-column text-right">
-                    <span class="font-weight-bold">
-                      <i class="ion ion-android-arrow-down text-danger"></i> 1%
-                    </span>
-                    <span class="text-muted">نرخ ثبت نام</span>
-                  </p>
-                </div>
-                <!-- /.d-flex -->
-              </div>
-            </div>
-          </div>
-          <!-- /.col-md-6 -->
-        </div>
-        <!-- /.row -->
-      </div>
-      <!-- /.container-fluid -->
-    </div>
-    <!-- /.content -->
-  </div>
   <!-- /.content-wrapper -->
+  <footer class="main-footer">
+    <strong>CopyLeft &copy; 2018 <a href="http://github.com/hesammousavi/">حسام موسوی</a>.</strong>
+  </footer>
 
   <!-- Control Sidebar -->
   <aside class="control-sidebar control-sidebar-dark">
     <!-- Control sidebar content goes here -->
   </aside>
   <!-- /.control-sidebar -->
-  <div>
-      @RenderBody();
-  </div>
-  <!-- Main Footer -->
-  <footer class="main-footer">
-    <!-- To the right -->
-    <div class="float-right d-none d-sm-block-down">
-      Anything you want
-    </div>
-    <!-- Default to the left -->
-    <strong>CopyLeft &copy; 2018 <a href="http://github.com/hesammousavi/">حسام موسوی</a>.</strong>
-  </footer>
 </div>
+<script src="~/lib/jquery/dist/jquery.js"></script>
 <!-- ./wrapper -->
-
-<!-- REQUIRED SCRIPTS -->
-
+@*<script src="~/js/aspnetcorefileuploading.js"></script>*@
 <!-- jQuery -->
 <script src="~/AdminTemplate/plugins/jquery/jquery.min.js"></script>
-<!-- Bootstrap -->
+<!-- jQuery UI 1.11.4 -->
+<script src="https://code.jquery.com/ui/1.12.1/jquery-ui.min.js"></script>
+<!-- Resolve conflict in jQuery UI tooltip with Bootstrap tooltip -->
+<script>
+  $.widget.bridge('uibutton', $.ui.button)
+</script>
+<!-- Bootstrap 4 -->
 <script src="~/AdminTemplate/plugins/bootstrap/js/bootstrap.bundle.min.js"></script>
-<!-- AdminLTE -->
+<!-- Morris.js charts -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/raphael/2.1.0/raphael-min.js"></script>
+<script src="~/AdminTemplate/plugins/morris/morris.min.js"></script>
+<!-- Sparkline -->
+<script src="~/AdminTemplate/plugins/sparkline/jquery.sparkline.min.js"></script>
+<!-- jvectormap -->
+<script src="~/AdminTemplate/plugins/jvectormap/jquery-jvectormap-1.2.2.min.js"></script>
+<script src="~/AdminTemplate/plugins/jvectormap/jquery-jvectormap-world-mill-en.js"></script>
+<!-- jQuery Knob Chart -->
+<script src="~/AdminTemplate/plugins/knob/jquery.knob.js"></script>
+<!-- daterangepicker -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.10.2/moment.min.js"></script>
+<script src="~/AdminTemplate/plugins/daterangepicker/daterangepicker.js"></script>
+<!-- datepicker -->
+<script src="~/AdminTemplate/plugins/datepicker/bootstrap-datepicker.js"></script>
+<!-- Bootstrap WYSIHTML5 -->
+<script src="~/AdminTemplate/plugins/bootstrap-wysihtml5/bootstrap3-wysihtml5.all.min.js"></script>
+<!-- Slimscroll -->
+<script src="~/AdminTemplate/plugins/slimScroll/jquery.slimscroll.min.js"></script>
+<!-- FastClick -->
+<script src="~/AdminTemplate/plugins/fastclick/fastclick.js"></script>
+<!-- AdminLTE App -->
 <script src="~/AdminTemplate/dist/js/adminlte.js"></script>
-
-<!-- OPTIONAL SCRIPTS -->
-<script src="~/AdminTemplate/plugins/chart.js/Chart.min.js"></script>
+<!-- AdminLTE dashboard demo (This is only for demo purposes) -->
+<script src="~/AdminTemplate/dist/js/pages/dashboard.js"></script>
+<!-- AdminLTE for demo purposes -->
 <script src="~/AdminTemplate/dist/js/demo.js"></script>
-<script src="~/AdminTemplate/dist/js/pages/dashboard3.js"></script>
+<script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
+<script src="//cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
+
 </body>
 </html>

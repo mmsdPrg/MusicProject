@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 using MusicProject.Areas.Identity.Data;
+using MusicProject.Models;
 
 namespace MusicProject.Data
 {
@@ -15,7 +16,8 @@ namespace MusicProject.Data
             : base(options)
         {
         }
-
+        public DbSet<Music> Music { get; set; }
+        public DbSet<MusicImage> MusicImage { get; set; }
         protected override void OnModelCreating(ModelBuilder builder)
         {
             base.OnModelCreating(builder);
