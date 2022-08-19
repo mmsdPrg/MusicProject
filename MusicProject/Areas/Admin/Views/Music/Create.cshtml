@@ -76,6 +76,7 @@
                                             <span class="input-group-text"><i class="fa fa-edit"></i></span>
                                         </div>
                                         <input asp-for="Name" type="text" class="form-control">
+                                        <br />
                                     </div>
                                     <!-- /.input group -->
                                 </div>
@@ -89,7 +90,7 @@
                                             <span class="input-group-text"><i class="fa fa-music"></i></span>
                                         </div>
                                         <input asp-for="MusicFile" id="mostanadPath" type="file" class="form-control">
-                                        <input type="button" onclick="UploadImage()" value="Upload" class="btn btn-outline-danger" id="btnUpLoad" />
+                                        <input type="button" onclick="UploadImage()" value="ثبت موسیقی" class="btn btn-outline-danger" id="btnUpLoad" />
                                     </div>
                                     <div class="progress">
                                         <div class="progress-bar progress-bar-success progress-bar-striped
@@ -110,7 +111,8 @@
                                         <div class="input-group-prepend">
                                             <span class="input-group-text"><i class="fa fa-image"></i></span>
                                         </div>
-                                        <input asp-for="MusicCover" id="ImageCover" type="file" class="form-control">
+                                        <input asp-for="MusicCover" id="ImageCover" type="file" class="form-control"><br />
+
                                     </div>
                                     <!-- /.input group -->
                                 </div>
@@ -131,7 +133,8 @@
                                         <div class="input-group-prepend">
                                             <span class="input-group-text"><i class="fa fa-user"></i></span>
                                         </div>
-                                        <input asp-for="Artist" type="text" class="form-control">
+                                        <input asp-for="Artist" type="text" class="form-control"><br />
+
                                     </div>
                                     <!-- /.input group -->
                                 </div>
@@ -149,6 +152,10 @@
                                 </div>
                             </div>
                             <!-- /.card-body -->
+                                        <span style="color:red" asp-validation-for="Artist"></span><br />
+                                        <span style="color:red" asp-validation-for="MusicCover"></span><br />
+                                        <span style="color:red" asp-validation-for="Name"></span>
+                            <button class="btn btn-success" id="btnSendToServer" disabled type="submit">ایجاد موسیقی</button>
                         </div>
                         <!-- /.card -->
                     </div>
@@ -157,7 +164,6 @@
                 <!-- /.row -->
             </div><!-- /.container-fluid -->
         </section>
-        <button class="btn-btn success" type="submit">ایجاد موسیقی</button>
     </form>
     <!-- /.content -->
 </div>
@@ -196,7 +202,6 @@
             const Img = event.target.files[0]
             let SizeImg = bytesToSize(Size).split(' ');
 
-            console.log(SizeImg)
             if (Extention.toLowerCase() == 'jpg' || Extention.toLowerCase() == 'png') {
 
                 if (SizeImg[1] == 'MB' && SizeImg[0] <= 2 || SizeImg[1] == 'KB') {
@@ -212,26 +217,33 @@
 
 
                 } else {
-                    alert('حجم عکس باید از 2 مگ کمتر باشد')
+                      swal.fire({
+                    title: "پیام",
+                    text: "حجم عکس باید از 2 مگ کمتر باشد",
+                    icon: "error",
+                    button: "باشه",
+                    timer: 3000
+                })
                     $(this).val('');
                     $(ShowImg).css('display', 'none')
                     $(DeleteImg).css('display', 'none')
-
+                 
                     return false;
                 }
 
             } else {
-                alert('فرمت فایل درست نمی باشد')
+                swal.fire({
+                    title: "پیام",
+                    text: "فرمت فایل مناسب نمی باشد",
+                    icon: "error",
+                    button: "باشه",
+                    timer: 3000
+                })
                 $(this).val('');
                 $(ShowImg).css('display', 'none')
                 $(DeleteImg).css('display', 'none')
-
                 return false;
             }
-
-
-
-
         })
 
     })
@@ -252,7 +264,6 @@
         var i = parseInt(Math.floor(Math.log(bytes) / Math.log(1024)));
         return Math.round(bytes / Math.pow(1024, i), 2) + ' ' + sizes[i];
     }
-
     function SwalToShowImage(ImgUrl) {
         swal.fire({
             title: 'عکس انتخابی',
@@ -264,91 +275,37 @@
     }
 </script>
 
+
 <script>
-    var UploadImage = function() {
-        var data = new FormData;
-        var file = $("#mostanadPath").get(0);
-        var files = file.files;
-        //File size control
-        //if (files[0].size >= 512000) {
-        //    $("#spnImageCartMlie").removeClass('hidden');
-        //    $("#spnImageCartMlie").text('The file size is more than 500 KB');
-        //    $("#spnImageCartMlie").css("color", "red");
-        //    return false;
-        //}
-
-
-        for (var i = 0; i < files.length; i++) {
-            data.append('filearray', files[i]);
-            data.append('filesize', files[i].size);
-        }
-        data.append('path', "img\\mostandat\\");
-
-        $.ajax({
-            //add here......
-            xhr: function() {
-                var xhr = new window.XMLHttpRequest();
-
-                xhr.upload.addEventListener("progress", function(evt) {
-                    if (evt.lengthComputable) {
-                        var percentComplete = evt.loaded / evt.total;
-                        percentComplete = parseInt(percentComplete * 100);
-
-                        $('.progress-bar').width(percentComplete + '%');
-                        $('.progress-bar').html(percentComplete + '%');
-
-                    }
-                }, false);
-
-                return xhr;
-            },
-
-
-            type: "post",
-            url: '/Home/UploadImageFile',
-            data: data,
-            contentType: false,
-            processData: false
-        }).done(function(result) {
-            if (result.status == "success") {
-                $("#ResultUpload").text("آپلود با موفقیت انجام شد.");
-                $("#divmessage").css("color", "green");
-                $("#divmessage").removeClass("hidden");
-
-
-                $("#newCartMlieImagePathName").val(result.imagename);
-            }
-
-        }).fail(function(result) {
-            if (result.status == "duplicate") {
-                $("#divmessage").css("color", "red");
-                $("#divmessage").removeClass("hidden");
-                $("#ResultUpload").text("فایل تکراری میباشد");
-            }
-            //if (result.status != "success") {
-            //    $("#divmessage").css("color", "red");
-            //    $("#divmessage").removeClass("hidden");
-            //    $("#ResultUpload").text("اشکالی در آپلود به وجود آمد");
-            //}
-        });
-
-
-    }
-</script>
-
-                <script>
     $("#mostanadPath").change(function() {
         var filename = this.files[0].name;
         $("#spnImageCartMlie").html(filename);
     });
 </script>
 
-
 <script>
 
-    $(mostanadPath).change(z => { 
-         $('.progress-bar').html("");
-        $('.progress-bar').css("width", "0");
+    $(mostanadPath).change(z => {
+        let Ext = getExtension(z.target.files[0].name);
+
+        if (Ext == "mp3" || Ext == "mp4") {
+
+            $('.progress-bar').html("");
+            $('.progress-bar').css("width", "0");
+        } else {
+            swal.fire({
+                title: "پیام",
+                text: "فرمت فایل مناسب نمی باشد",
+                icon: "error",
+                button: "باشه",
+                timer: 3000
+            })
+            $("#btnSendToServer").prop("disabled", true);
+
+            $(mostanadPath).val("");
+
+        }
+
     })
 
     var UploadImage = function() {
@@ -370,9 +327,6 @@
             data.append('filesize', files[i].size);
         }
         data.append('path', "img\\mostandat\\");
-
-
-        console.log(data)
         $.ajax({
             //add here......
             xhr: function() {
@@ -397,27 +351,39 @@
             contentType: false,
             processData: false
         }).done(function(result) {
-            console.log(result)
             if (result.status == "success") {
-                $("#divmessage").text("Upload was successful.");
-                $("#divmessage").css("color", "green");
-                $("#divmessage").removeClass("hidden");
+                $("#ResultUpload").css("color", "green");
+                $("#ResultUpload").html("اپلود با موفقیت انجام شد")
+                //$("#mostanadPath").val("")
+                $("#btnSendToServer").prop("disabled", false);
 
 
+            } else if (result.status == "duplicate") {
+                $("#ResultUpload").css("color", "red");
+                $("#ResultUpload").html("این فایل تکراری می باشد")
+                $("#btnSendToServer").prop("disabled", true);
+                $("#mostanadPath").val("")
 
+            }
+            else {
+                $("#ResultUpload").css("color", "red");
+                $("#ResultUpload").html("آپلود با شکست مواجه شد")
+                $("#btnSendToServer").prop("disabled", true);
+                $("#mostanadPath").val("")
 
-                $("#newCartMlieImagePathName").val(result.imagename);
             }
 
         }).fail(function(result) {
-            console.log(result)
-            if (result.status != "success") {
-                $("#divmessage").css("color", "red");
-                $("#divmessage").removeClass("hidden");
-                $("#divmessage").text("There was a problem uploading.");
-            }
+
+            $("#ResultUpload").css("color", "red");
+            $("#ResultUpload").html("آپلود با شکست مواجه شد")
+            $("#btnSendToServer").prop("disabled", true);
+
         });
 
-
+        //$("#mostanadPath").val("")
+    }
+    function getExtension(filename) {
+        return filename.split(".").pop();
     }
 </script>

@@ -6,8 +6,10 @@ using MusicProject.Areas.Admin.IRepository;
 using MusicProject.Areas.Admin.Repository;
 using MusicProject.Areas.Admin.ViewModel;
 using MusicProject.Models;
+using System.Collections.Generic;
 using System.IO;
 using System.Threading.Tasks;
+using X.PagedList;
 
 namespace MusicProject.Areas.Admin.Controllers
 {
@@ -35,7 +37,8 @@ namespace MusicProject.Areas.Admin.Controllers
             {
                 return Json(new { status = "duplicate", imagename = "" });
 
-            }else
+            }
+            else
             {
                 var fileStream = new FileStream(Paths, FileMode.Create);
                 await filearray.CopyToAsync(fileStream);
@@ -52,20 +55,37 @@ namespace MusicProject.Areas.Admin.Controllers
             //    TempData["Suc"] = "موزیک ثبت شد";
             return View();
         }
-        public IActionResult CreateMusic(AddMusicViewModel model, [FromServices] IMapper mapper)
+        public async Task<IActionResult> CreateMusic(AddMusicViewModel model, [FromServices] IMapper mapper)
         {
-            int Success = Repo.Create(model, mapper);
+            int Success = await Repo.Create(model, mapper);
             if (Success == 1)
                 TempData["Suc"] = "موزیک ثبت شد";
+            return Redirect("/admin/home/index");
+            
+        }
+        public IActionResult ListOfFile(int ? page)
+        {
+            int Pages = page ?? 1;
+            int pageSize = 10;
+            string path = Path.Combine(env.WebRootPath, "uploads");
+            ViewData["File"]= Directory.GetFiles(path).ToPagedList(Pages,pageSize);
             return View();
+        }
+        public IActionResult DeleteFile(string Name)
+        {
+            string FullPath = Path.Combine(env.WebRootPath, "uploads", Name);
+            if (System.IO.File.Exists(FullPath))
+            {
+                System.IO.File.Delete(FullPath);
+                return Json(new { status = true });
+            }
+            return Json(new { status = false });
+
         }
         public IActionResult Test()
         {
             return View();
         }
-        //public IActionResult UploadImageFile(IFormFile data, string path)
-        //{
-        //    return Json(new {status= "success" });
-        //}
+        
     }
 }

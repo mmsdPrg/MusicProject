@@ -9,6 +9,7 @@ namespace MusicProject.Areas.Admin.ViewModel
         public string Name { get; set; }
         [Required(ErrorMessage = "فایل آهنگ ضروری است")]
         public IFormFile MusicFile { get; set; }
+        [Required(ErrorMessage ="کاور موسیقی الزامی می باشد")]
         public IFormFile MusicCover  { get; set; }
 
         [Required(ErrorMessage = "خواننده آهنگ ضروری است")]
