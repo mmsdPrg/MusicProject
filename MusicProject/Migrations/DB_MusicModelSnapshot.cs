@@ -225,6 +225,45 @@ namespace MusicProject.Migrations
                     b.ToTable("AspNetUsers");
                 });
 
+            modelBuilder.Entity("MusicProject.Models.Artist", b =>
+                {
+                    b.Property<int>("id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<string>("ArtistName")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Biography")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("ImagePath")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<float>("Score")
+                        .HasColumnType("real");
+
+                    b.HasKey("id");
+
+                    b.ToTable("Artists");
+                });
+
+            modelBuilder.Entity("MusicProject.Models.ArtistMusic", b =>
+                {
+                    b.Property<int>("MusicId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("ArtistId")
+                        .HasColumnType("int");
+
+                    b.HasKey("MusicId", "ArtistId");
+
+                    b.HasIndex("ArtistId");
+
+                    b.ToTable("ArtistMusic");
+                });
+
             modelBuilder.Entity("MusicProject.Models.Music", b =>
                 {
                     b.Property<int>("Id")
@@ -232,8 +271,8 @@ namespace MusicProject.Migrations
                         .HasColumnType("int")
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
-                    b.Property<string>("Artist")
-                        .HasColumnType("nvarchar(max)");
+                    b.Property<double>("CountOfPlays")
+                        .HasColumnType("float");
 
                     b.Property<DateTime>("Created")
                         .HasColumnType("datetime2");
@@ -323,6 +362,25 @@ namespace MusicProject.Migrations
                         .IsRequired();
                 });
 
+            modelBuilder.Entity("MusicProject.Models.ArtistMusic", b =>
+                {
+                    b.HasOne("MusicProject.Models.Artist", "Artist")
+                        .WithMany("Musics")
+                        .HasForeignKey("ArtistId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("MusicProject.Models.Music", "Music")
+                        .WithMany("Artists")
+                        .HasForeignKey("MusicId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Artist");
+
+                    b.Navigation("Music");
+                });
+
             modelBuilder.Entity("MusicProject.Models.MusicImage", b =>
                 {
                     b.HasOne("MusicProject.Models.Music", "Music")
@@ -334,8 +392,15 @@ namespace MusicProject.Migrations
                     b.Navigation("Music");
                 });
 
+            modelBuilder.Entity("MusicProject.Models.Artist", b =>
+                {
+                    b.Navigation("Musics");
+                });
+
             modelBuilder.Entity("MusicProject.Models.Music", b =>
                 {
+                    b.Navigation("Artists");
+
                     b.Navigation("Imgs");
                 });
 #pragma warning restore 612, 618

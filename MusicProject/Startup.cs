@@ -44,6 +44,7 @@ namespace MusicProject
             services.AddSingleton(mapper);
 
             services.AddScoped(typeof(IMusic), typeof(MusicRepository));
+            services.AddScoped(typeof(IArtist), typeof(ArtistRepository));
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -66,6 +67,7 @@ namespace MusicProject
             app.UseSession();
             app.UseAuthentication();
             app.UseAuthorization();
+
             app.UseEndpoints(endpoints =>
             {
                 endpoints.MapControllerRoute(
@@ -76,7 +78,7 @@ namespace MusicProject
                     name: "default",
                     pattern: "{controller=Home}/{action=Index}/{id?}");
             });
-         
+            
             createRole(userManager, roleManager).Wait();
 
         }

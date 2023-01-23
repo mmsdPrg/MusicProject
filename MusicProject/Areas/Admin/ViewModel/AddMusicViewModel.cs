@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Http;
+using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 
 namespace MusicProject.Areas.Admin.ViewModel
@@ -11,9 +12,8 @@ namespace MusicProject.Areas.Admin.ViewModel
         public IFormFile MusicFile { get; set; }
         [Required(ErrorMessage ="کاور موسیقی الزامی می باشد")]
         public IFormFile MusicCover  { get; set; }
-
-        [Required(ErrorMessage = "خواننده آهنگ ضروری است")]
-        public string Artist  { get; set; }
+        //[Required(ErrorMessage = "خواننده آهنگ ضروری است")]
+        //public List<string> Artists  { get; set; }
         public string Discription  { get; set; }
     }
 }

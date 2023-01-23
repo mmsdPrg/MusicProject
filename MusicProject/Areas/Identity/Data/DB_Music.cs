@@ -18,8 +18,22 @@ namespace MusicProject.Data
         }
         public DbSet<Music> Music { get; set; }
         public DbSet<MusicImage> MusicImage { get; set; }
+        public DbSet<Artist> Artists { get; set; }
+        public DbSet<ArtistMusic> ArtistMusic { get; set; }
         protected override void OnModelCreating(ModelBuilder builder)
         {
+
+            builder.Entity<ArtistMusic>()
+      .HasKey(bc => new { bc.MusicId, bc.ArtistId });
+            builder.Entity<ArtistMusic>()
+                .HasOne(bc => bc.Music)
+                .WithMany(b => b.Artists)
+                .HasForeignKey(bc => bc.MusicId);
+            builder.Entity<ArtistMusic>()
+                .HasOne(bc => bc.Artist)
+                .WithMany(c => c.Musics)
+                .HasForeignKey(bc => bc.ArtistId);
+
             base.OnModelCreating(builder);
             // Customize the ASP.NET Identity model and override the defaults if needed.
             // For example, you can rename the ASP.NET Identity table names and more.

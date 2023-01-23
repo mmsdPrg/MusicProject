@@ -35,8 +35,9 @@
     <script src="~/lib/jquery/dist/jquery.js"></script>
     <script src="~/lib/jquery/dist/jquery.min.js"></script>
 
+    <link rel="stylesheet" href="~/AdminTemplate/plugins/select2/select2.min.css">
 
-     <script src="~/lib/jquery-validation/dist/jquery.validate.js"></script>
+    <script src="~/lib/jquery-validation/dist/jquery.validate.js"></script>
     <script src="~/lib/jquery-validation-unobtrusive/jquery.validate.unobtrusive.js"></script>
 </head>
 <body class="hold-transition sidebar-mini">
@@ -245,15 +246,23 @@
                                         </a>
                                     </li>
                                     <li class="nav-item">
-                                        <a href="pages/charts/flot.html" class="nav-link">
-                                            <i class="fa fa-circle-o nav-icon"></i>
-                                            <p>نمودار Flot</p>
-                                        </a>
-                                    </li>
-                                    <li class="nav-item">
                                         <a href="/admin/music/ListOfFile" class="nav-link">
                                             <i class="fa fa-circle-o nav-icon"></i>
                                             <p>موسیقی ها شما</p>
+                                        </a>
+
+                                    </li>
+                                    <li class="nav-item">
+                                        <a href="/admin/music/ListOfArtist" class="nav-link">
+                                            <i class="fa fa-circle-o nav-icon"></i>
+                                            <p>هنرمندان</p>
+                                        </a>
+                                    </li>
+
+                                    <li class="nav-item">
+                                        <a href="/admin/music/ListOfCovers" class="nav-link">
+                                            <i class="fa fa-circle-o nav-icon"></i>
+                                            <p>کاور های موسیقی</p>
                                         </a>
                                     </li>
                                 </ul>
@@ -550,9 +559,9 @@
     <script src="~/AdminTemplate/dist/js/demo.js"></script>
     <script src="//cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 
+    <script src="~/AdminTemplate/plugins/select2/select2.js"></script>
 
-
-     @{
+    @{
         if (TempData["Suc"] != null)
         {
             <script>
@@ -563,6 +572,22 @@
                     title: "پیام",
                     text: msg,
                     icon: "success",
+                    button: "باشه",
+                    timer: 3000
+                })
+                })
+            </script>
+        }
+        if (TempData["Failed"] != null)
+        {
+            <script>
+            var msg=@Html.Raw(Json.Serialize(TempData["Failed"]))
+                $(() => {
+                    //var msg = $(txtAlert).attr('txtid');
+                   swal.fire({
+                    title: "پیام",
+                    text: msg,
+                    icon: "error",
                     button: "باشه",
                     timer: 3000
                 })

@@ -1,0 +1,419 @@
+﻿
+@{
+    ViewData["Title"] = "EditMusic";
+    Layout = "~/Areas/Admin/Views/Shared/_Layout.cshtml";
+    var Artists = ViewData["Artist"] as List<Artist>;
+}
+@model Music
+<style>
+    .progress .bar {
+        background: green;
+        width: 33%;
+        height: 30px;
+    }
+
+
+
+    .upload-button .label {
+        line-height: 200px;
+        pointer-events: none;
+        position: absolute;
+        left: 0;
+        top: 0;
+        width: 200px;
+        height: 200px;
+    }
+
+    .upload-button input {
+        opacity: 0;
+        cursor: pointer;
+        font-size: 200px;
+        width: 200px;
+        height: 200px;
+    }
+
+
+
+    .progress .label {
+        line-height: 30px;
+        text-align: center;
+        position: absolute;
+        left: 0;
+        top: 0;
+        width: 100%;
+        height: 30px;
+    }
+</style>
+
+<div class="content-wrapper">
+    <!-- Content Header (Page header) -->
+    <!-- Main content -->
+    <form asp-area="admin" asp-controller="Music" asp-action="EditMusic" method="post" enctype="multipart/form-data" asp-route-id="@Model.Id">
+        <section class="content">
+            <div class="container-fluid">
+                <div class="row">
+                    <div class="col-12">
+                        <div class="card card-secondary">
+                            <div class="card-header">
+                                <h3 class="card-title">ویرایش موسیقی </h3>
+                            </div>
+                            <div class="card-body">
+                                <!-- Date dd/mm/yyyy -->
+                                <div class="form-group">
+                                    <label>اسم موسیقی :</label>
+
+                                    <div class="input-group">
+                                        <div class="input-group-prepend">
+                                            <span class="input-group-text"><i class="fa fa-edit"></i></span>
+                                        </div>
+                                        <input asp-for="Name" required value="@Model.Name" type="text" class="form-control">
+                                        <br />
+                                    </div>
+                                    <!-- /.input group -->
+                                </div>
+                                <!-- /.form group -->
+                                <!-- phone mask -->
+                                <div class="form-group">
+                                    <label>فایل موسیقی : </label>
+
+                                    <div class="input-group">
+                                        <audio id="CurrentMusic" controls>
+                                            <source src="~/uploads/@Model.MusicPath320" type="audio/mp3" />
+                                        </audio>
+                                        <input id="mostanadPath" type="file" value="@Model.MusicPath320" name="MusicFile" class="form-control">
+                                        <input type="button" onclick="UploadEditMusic()" value="ثبت موسیقی" class="btn btn-outline-warning" id="btnUpLoad" />
+                                    </div>
+                                    <div class="progress">
+                                        <div class="progress-bar progress-bar-success progress-bar-striped
+    active" role="progressbar"
+                                             aria-valuemin="0" aria-valuemax="100" style="width:0%">
+                                            0%
+                                        </div>
+                                    </div>
+                                    @*<div class="input-group">
+                                            <div class="input-group-prepend">
+                                                <span class="input-group-text"><i class="fa fa-music"></i></span>
+                                            </div>
+                                            <input id="mostanadPath" type="file" value="@Model.MusicPath320" class="form-control">
+                                            <input type="button" onclick="UploadImage()" value="ثبت موسیقی" class="btn btn-outline-success" id="btnUpLoad" />
+                                        </div>*@
+
+
+
+                                    <label id="ResultUpload"></label>
+                                </div>
+                                <div class="form-group">
+                                    <label>کاور موسیقی:</label>
+                                    <div class="input-group">
+                                        <div class="input-group-prepend">
+                                            <span class="input-group-text"><i class="fa fa-image"></i></span>
+                                        </div>
+                                        @if (Model.Imgs.Count > 0)
+                                        {
+                                        <input id="ImageCover" value="@Model.Imgs[0].ImgPath"  name="MusicCover" type="file" class="form-control"><br />
+                                        }
+                                        else
+                                        {
+                                            <input required id="ImageCover" name="MusicCover" type="file" class="form-control"><br />
+                                        }
+                                    </div>
+                                    <!-- /.input group -->
+                                </div>
+                                <div>
+                                    @foreach (var item in Model.Imgs)
+                                    {
+                                        string PathImg = item.ImgPath;
+                                        <i id="@item.Id" onclick="DeleteImageMusic(@item.Id)" class="fa fa-trash" style="color:red;cursor:pointer" aria-hidden="true"></i>
+                                        <img width="140" src="~/ImagesCover/@PathImg" />
+                                    }
+                                </div>
+                                <div class="row">
+                                    <div class="col-2">
+                                        <button style="display:none" id="ShowImg" class="btn btn-success">نمایش عکس</button>
+                                    </div>
+                                    <div class="col-2">
+                                        <button style="display:none" id="DeleteImg" class="btn btn-danger">حذف عکس</button>
+                                    </div>
+                                </div>
+
+                                <div class="form-group">
+                                    <label>نام خواننده :</label>
+                                    <select required name="Artists" class="form-control select2" multiple="multiple" data-placeholder="خواننده ها را انتخاب کنید"
+                                            style="width: 100%;text-align: right">
+                                        @foreach (var item in Artists)
+                                        {
+                                            <option value="@item.id">@item.ArtistName</option>
+                                        }
+                                    </select>
+                                </div>
+                                <!-- /.form group -->
+                                <div class="form-group">
+                                    <label> توضیحات موسیقی:</label>
+
+                                    <div class="input-group">
+                                        <div class="input-group-prepend">
+                                            <span class="input-group-text"><i class="fa fa-edit"></i></span>
+                                        </div>
+                                        <textarea name="Discription" type="text" class="form-control">@Model.Description</textarea>
+                                    </div>
+                                    <!-- /.input group -->
+                                </div>
+                            </div>
+                            <!-- /.card-body -->
+                            <span style="color:red" asp-validation-for="Name"></span>
+                            <button class="btn btn-success" id="btnSendToServer" type="submit">ویرایش موسیقی</button>
+                        </div>
+                        <!-- /.card -->
+                    </div>
+                    <!-- /.col (left) -->
+                </div>
+                <!-- /.row -->
+            </div><!-- /.container-fluid -->
+        </section>
+    </form>
+    <!-- /.content -->
+</div>
+<script src="~/lib/jquery/dist/jquery.js"></script>
+<script src="~/lib/jquery/dist/jquery.min.js"></script>
+@*<script>
+        $(() => {
+            $(btnCancel).click(function() {
+                var input = document.getElementById(files);
+                console.log(input)
+                var files = input.files[0].name;
+
+                $.post('/admin/uploader/CancelFile', { FileName: files }, data => {
+                    alert(data)
+                })
+            })
+        })
+    </script>*@
+<script>
+    $(() => {
+
+        $(ShowImg).click(function (event) {
+            event.preventDefault();
+            let img = $(ImageCover).attr('Base64');
+            SwalToShowImage(img)
+        })
+        $(DeleteImg).click(function (event) {
+            event.preventDefault();
+            $(ImageCover).val('');
+            $(ShowImg).css('display', 'none')
+            $(DeleteImg).css('display', 'none')
+        })
+        $(ImageCover).change(function (event) {
+            const Size = event.target.files[0].size;
+            const Extention = event.target.files[0].name.split('.')[1];
+            const Img = event.target.files[0]
+            let SizeImg = bytesToSize(Size).split(' ');
+
+            if (Extention.toLowerCase() == 'jpg' || Extention.toLowerCase() == 'png') {
+
+                if (SizeImg[1] == 'MB' && SizeImg[0] <= 2 || SizeImg[1] == 'KB') {
+                    let Reader = new FileReader();
+                    Reader.readAsDataURL(Img)
+                    Reader.onloadend = z => {
+                        SwalToShowImage(z.target.result)
+                        //document.getElementById(ImageCover).setAttribute('Base64',z.target.result)
+                        $(ImageCover).attr('Base64', z.target.result)
+                        $(ShowImg).css('display', 'block')
+                        $(DeleteImg).css('display', 'block')
+                    }
+
+
+                } else {
+                    swal.fire({
+                        title: "پیام",
+                        text: "حجم عکس باید از 2 مگ کمتر باشد",
+                        icon: "error",
+                        button: "باشه",
+                        timer: 3000
+                    })
+                    $(this).val('');
+                    $(ShowImg).css('display', 'none')
+                    $(DeleteImg).css('display', 'none')
+
+                    return false;
+                }
+
+            } else {
+                swal.fire({
+                    title: "پیام",
+                    text: "فرمت فایل مناسب نمی باشد",
+                    icon: "error",
+                    button: "باشه",
+                    timer: 3000
+                })
+                $(this).val('');
+                $(ShowImg).css('display', 'none')
+                $(DeleteImg).css('display', 'none')
+                return false;
+            }
+        })
+
+    })
+    const units = ['bytes', 'KB', 'MB', 'GB', 'TB', 'PB', 'EB', 'ZB', 'YB'];
+    function niceBytes(x) {
+
+        let l = 0, n = parseInt(x, 10) || 0;
+
+        while (n >= 1024 && ++l) {
+            n = n / 1024;
+        }
+
+        return (n.toFixed(n < 10 && l > 0 ? 1 : 0) + ' ' + units[l]);
+    }
+    function bytesToSize(bytes) {
+        var sizes = ['Bytes', 'KB', 'MB', 'GB', 'TB'];
+        if (bytes == 0) return '0 Byte';
+        var i = parseInt(Math.floor(Math.log(bytes) / Math.log(1024)));
+        return Math.round(bytes / Math.pow(1024, i), 2) + ' ' + sizes[i];
+    }
+    function SwalToShowImage(ImgUrl) {
+        swal.fire({
+            title: 'عکس انتخابی',
+            button: 'باشه',
+            imageUrl: ImgUrl,
+            imageWidth: 400,
+            imageHeight: 200,
+        })
+    }
+</script>
+
+
+<script>
+    $("#mostanadPath").change(function () {
+        var filename = this.files[0].name;
+        $("#spnImageCartMlie").html(filename);
+        $("#btnSendToServer").prop('disabled', true);
+
+    });
+</script>
+
+<script>
+
+    $(mostanadPath).change(z => {
+        $("#ResultUpload").html("")
+        $("#btnUpLoad").prop('disabled', false);
+        let Ext = getExtension(z.target.files[0].name);
+
+        if (Ext == "mp3" || Ext == "mp4") {
+
+            $('.progress-bar').html("");
+            $('.progress-bar').css("width", "0");
+        } else {
+            swal.fire({
+                title: "پیام",
+                text: "فرمت فایل مناسب نمی باشد",
+                icon: "error",
+                button: "باشه",
+                timer: 3000
+            })
+            $('.progress-bar').width(0 + '%');
+            $('.progress-bar').html(0 + '%');
+
+            $(mostanadPath).val("");
+
+        }
+
+    })
+
+    var UploadEditMusic = function () {
+
+        var data = new FormData;
+        var file = $("#mostanadPath").get(0);
+        if (file.files[0] != null) {
+
+            var files = file.files;
+            for (var i = 0; i < files.length; i++) {
+                data.append('filearray', files[i]);
+                data.append('filesize', files[i].size);
+            }
+            data.append('path', "img\\mostandat\\");
+            $.ajax({
+                //add here......
+                xhr: function () {
+                    var xhr = new window.XMLHttpRequest();
+
+                    xhr.upload.addEventListener("progress", function (evt) {
+                        if (evt.lengthComputable) {
+                            var percentComplete = evt.loaded / evt.total;
+                            percentComplete = parseInt(percentComplete * 100);
+
+                            $('.progress-bar').width(percentComplete + '%');
+                            $('.progress-bar').html(percentComplete + '%');
+
+                        }
+                    }, false);
+
+                    return xhr;
+                },
+                type: "POST",
+                url: "/Admin/Music/UploadMuiscFile",
+                data: data,
+                contentType: false,
+                processData: false
+            }).done(function (result) {
+                if (result.status == "success") {
+                    $("#ResultUpload").css("color", "green");
+                    $("#ResultUpload").html("اپلود با موفقیت انجام شد")
+                    $("#btnUpLoad").prop('disabled', true);
+                    $("#btnSendToServer").prop('disabled', false);
+                   
+
+                } else if (result.status == "duplicate") {
+                    $("#ResultUpload").css("color", "red");
+                    $("#ResultUpload").html("این فایل تکراری می باشد")
+                    $("#mostanadPath").val("")
+                    $('.progress-bar').width(0 + '%');
+                    $('.progress-bar').html(0 + '%');
+
+                }
+                else {
+                    $("#ResultUpload").css("color", "red");
+                    $("#ResultUpload").html("آپلود با شکست مواجه شد")
+                    $("#mostanadPath").val("")
+                    $('.progress-bar').width(0 + '%');
+                    $('.progress-bar').html(0 + '%');
+
+                }
+
+            }).fail(function (result) {
+
+                $("#ResultUpload").css("color", "red");
+                $("#ResultUpload").html("آپلود با شکست مواجه شد")
+
+            });
+
+            //$("#mostanadPath").val("")
+        } else {
+            $("#ResultUpload").css("color", "red");
+            $("#ResultUpload").html("فایلی انتخاب نشده است")
+        }
+    }
+
+    function DeleteImageMusic(id) {
+        if (id != 0 || id != null) {
+
+
+
+            $.post("@Url.Action("DeleteImageMusic","Music")", { id: id }, result => {
+                if (result == true) {
+                    $(`#${id}`).next().remove();
+                    $(`#${id}`).remove();
+                }
+
+            })
+        }
+    }
+    function getExtension(filename) {
+        return filename.split(".").pop();
+    }
+</script>
+<script>
+    $(function () {
+        //Initialize Select2 Elements
+        $('.select2').select2()
+    })
+</script>

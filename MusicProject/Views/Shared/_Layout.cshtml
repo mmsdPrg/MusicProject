@@ -253,12 +253,14 @@ body {
     <!-- player -->
     <div class="player">
         <div class="player__cover">
-            <img src="~/Template/img/covers/TANHAM NAZAR.jpg" alt="">
+            <img id="ImageMusic" src="" alt="">
         </div>
 
         <div class="player__content">
-            <span class="player__track"><b class="player__title">تنهام نذار</b> – <span class="player__artist">مهراد خمیری</span></span>
-            <audio src="audio/Mehrad_Khamiri_-_02_Tanham_Nazar.mp3" id="audio" controls></audio>
+            <span class="player__track"><b class="player__title"></b> – <span class="player__artist"></span></span>
+            <audio id="audio" controls>
+                <source class="AudioPlayed" src="" />
+            </audio>
         </div>
     </div>
 
@@ -557,7 +559,7 @@ body {
     <script src="~/Template/js/jquery.inputmask.min.js"></script>
     <script src="~/Template/js/plyr.min.js"></script>
     <script src="~/Template/js/main.js"></script>
-    <script src="//code.tidio.co/9jnsv72wukkwsxu2vuppzni0x5xdbc81.js" async></script>
+    @*<script src="//code.tidio.co/9jnsv72wukkwsxu2vuppzni0x5xdbc81.js" async></script>*@
 
 </body>
 

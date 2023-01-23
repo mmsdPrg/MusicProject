@@ -1,0 +1,161 @@
+﻿@model IEnumerable<Artist>
+@{
+    ViewData["Title"] = "ListOfArtist";
+    Layout = "~/Areas/Admin/Views/Shared/_Layout.cshtml";
+    var CountOfAlbom = ViewData["CountOfAlbum"] as List<ArtistMusic>;
+}
+<head lang="en">
+    <style>
+        .pagination li {
+            background-color: transparent;
+            /*padding:10px;*/
+        }
+    </style>
+</head>
+<div class="content-wrapper" style="min-height: 724px;">
+    <!-- Content Header (Page header) -->
+    <section class="content-header">
+        <div class="container-fluid">
+        </div><!-- /.container-fluid -->
+    </section>
+
+    <!-- Main content -->
+    <section class="content">
+        <div class="container-fluid">
+            <!-- /.row -->
+            <div class="row">
+                <div class="col-12">
+                    <div class="card">
+                        <div class="card-header">
+                            <h3 class="card-title">
+                                جدول هنرمندان
+                            </h3>
+                            <a class="btn btn-success" href="@Url.Action("CreateArtist","Music")">اضافه کردن هنرمند جدید</a>
+
+                            <div class="card-tools">
+                                <div class="input-group input-group-sm" style="width: 150px;">
+                                    <input id='myInput' type="text" name="table_search" class="form-control float-right" onkeyup='searchTable()' placeholder="جستجو">
+
+                                    <div class="input-group-append">
+                                        <button type="submit" class="btn btn-default"><i class="fa fa-search"></i></button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <!-- /.card-header -->
+                        <div class="card-body table-responsive p-0">
+                            <table class="table table-hover" id='myTable'>
+                                <thead>
+                                    <tr>
+                                        <th></th>
+                                        <th>نام خواننده</th>
+                                        <th>امتیاز</th>
+                                        <th>تعداد آلبوم ها </th>
+                                        <th>بیوگرافی</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+
+                                    @foreach (var item in Model)
+                                    {
+                                        <tr>
+                                            <td>
+                                                <a href="@Url.Action("EditArtist","music",new {Id=item.id })"><i class="fa-solid fa-pen-to-square" style="color:blue;cursor:pointer"></i></a>
+                                                <i onclick="DeleteArtist(@item.id)" class="fa fa-trash" style="color:red;cursor:pointer" aria-hidden="true"></i>
+                                            </td>
+                                            <td>@item.ArtistName</td>
+                                            <td>
+                                            </td>
+                                            <td>
+                                                @{
+                                                    <span>@CountOfAlbom.Where(z => z.ArtistId == item.id).Count()</span>
+                                                }
+                                            </td>
+                                            <td>
+                                                @item.Biography
+                                            </td>
+                                        </tr>
+                                    }
+                                </tbody>
+
+                            </table>
+                        </div>
+
+                        <!-- /.card-body -->
+                    </div>
+                    @*@Html.PagedListPager((IPagedList)files, Page => Url.Action("ListOfFile", "Music", new { Page = Page }),
+                        new X.PagedList.Web.Common.PagedListRenderOptions
+                        {
+                        ContainerDivClasses = new[] { "pagination" },
+                        //LiElementClasses = new[] { "active", "pl-3" },
+                        LiElementClasses = new[] { "page-item" },
+                        PageClasses = new[] { "page-link" },
+                        })*@
+                    <!-- /.card -->
+                </div>
+            </div><!-- /.row -->
+        </div><!-- /.container-fluid -->
+    </section>
+    <!-- /.content -->
+</div>
+<script>
+    function SwalOpener(e)
+</script>
+<script>
+    function DeleteArtist(Id) {
+        swal.fire({
+            title: 'آیا میخواهید این هنرمند را حذف کنید؟',
+            icon: 'info',
+            showDenyButton: true,
+            confirmButtonText: 'بله',
+            denyButtonText: `خیر`,
+        }).then((result) => {
+            if (result.isConfirmed) {
+
+                $.post("@Url.Action("DeleteArtist", "Music")", { id: Id }, result => {
+
+                    if (result == true) {
+                        window.location.reload(true);
+                        Swal.fire({
+                            icon: 'success',
+                            title: 'هنرمند با موفقیت حذف شد ',
+                        })
+                    } else {
+                        Swal.fire({
+                            icon: 'error',
+                            title: 'مشکلی به وجود آمد بعدا تلاش کنید ',
+                        })
+                    }
+                })
+            } else {
+            }
+        })
+    }
+
+
+</script>
+<script>
+    function searchTable() {
+        var input, filter, found, table, tr, td, i, j;
+        input = document.getElementById("myInput");
+        filter = input.value.toUpperCase();
+        table = document.getElementById("myTable");
+        tr = table.getElementsByTagName("tr");
+        for (i = 0; i < tr.length; i++) {
+            td = tr[i].getElementsByTagName("td");
+            for (j = 0; j < td.length; j++) {
+                if (td[j].innerHTML.toUpperCase().indexOf(filter) > -1) {
+                    found = true;
+                }
+            }
+            if (found) {
+                tr[i].style.display = "";
+                found = false;
+            } else {
+                tr[i].style.display = "none";
+            }
+        }
+    }
+
+
+</script>

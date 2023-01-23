@@ -2,6 +2,8 @@
     ViewData["Title"] = "ListOfFile";
     Layout = "~/Areas/Admin/Views/Shared/_Layout.cshtml";
     var files = ViewData["File"] as IEnumerable<string>;
+    var IsInDatabase = ViewData["IsInDataBase"] as List<Music>;
+    var ArtistMusic = ViewData["Artists"] as List<ArtistMusic>;
 }
 <head lang="en">
 
@@ -13,7 +15,6 @@
     </style>
 </head>
 
-@inject DB_Music db;
 <div class="content-wrapper" style="min-height: 724px;">
     <!-- Content Header (Page header) -->
     <section class="content-header">
@@ -49,6 +50,7 @@
                                         <th></th>
                                         <th>نام موسیقی</th>
                                         <th>فایل موسیقی</th>
+                                        <th>نام خواننده</th>
                                         <th>وضعیت</th>
                                     </tr>
                                     @foreach (var item in files)
@@ -57,10 +59,13 @@
                                         <tr>
                                             <td>
                                                 @{
-                                                    if (db.Music.Any(z => z.MusicPath320 == Split[9])==false)
+                                                    if (IsInDatabase.Any(z => z.MusicPath320 == Split[9]))
                                                     {
-                                                        <i href="#" onclick="SwalOpener(this)" NameOfMusic="@Split[9]" class="fa fa-trash" style="color:red" aria-hidden="true"></i>
+                                                        var IdFileToEdit = IsInDatabase.FirstOrDefault(z => z.MusicPath320 == Split[9]);
+                                                        <a href="@Url.Action("EditMusic","Music",new {id=IdFileToEdit.Id })"><i class="fa-solid fa-pen-to-square" style="color:blue;cursor:pointer"></i></a>
                                                     }
+                                                    <i href="#" onclick="SwalOpener(this)" NameOfMusic="@Split[9]" class="fa fa-trash" style="color:red;cursor:pointer" aria-hidden="true"></i>
+
                                                 }
                                             </td>
                                             <td>@Split[9]</td>
@@ -72,9 +77,24 @@
                                                 </audio>
                                             </td>
                                             <td>
+                                                @{
+                                                    var Music = IsInDatabase.FirstOrDefault(z => z.MusicPath320 == Split[9]);
+                                                    if (Music != null)
+                                                    {
+
+                                                        var Artists = ArtistMusic.Where(z => z.MusicId == Music.Id);
+                                                        foreach (var Artist in Artists)
+                                                        {
+                                                            <span>@Artist.Artist.ArtistName</span>
+                                                            <hr />
+                                                        }
+                                                    }
+                                                }
+                                            </td>
+                                            <td>
 
                                                 @{
-                                                    if (db.Music.Any(z => z.MusicPath320 == Split[9]))
+                                                    if (IsInDatabase.Any(z => z.MusicPath320 == Split[9]))
                                                     {
                                                         <span class="badge badge-success">
                                                             فایل مفید
@@ -103,10 +123,10 @@
                     @Html.PagedListPager((IPagedList)files, Page => Url.Action("ListOfFile", "Music", new { Page = Page }),
                     new X.PagedList.Web.Common.PagedListRenderOptions
                     {
-                        ContainerDivClasses = new[] { "pagination" },
-                        //LiElementClasses = new[] { "active", "pl-3" },
-                        LiElementClasses = new[] { "page-item" },
-                        PageClasses = new[] { "page-link" },
+                    ContainerDivClasses = new[] { "pagination" },
+                    //LiElementClasses = new[] { "active", "pl-3" },
+                    LiElementClasses = new[] { "page-item" },
+                    PageClasses = new[] { "page-link" },
                     })
                     <!-- /.card -->
                 </div>
@@ -141,11 +161,8 @@
     }
 </script>
 <script>
-
-    function SwalOpener(e)
-    {
-       let nameMusic =e.getAttribute("NameOfMusic");
-        //alert($(e).attr("NameOfMusic"))
+    function SwalOpener(e) {
+        let nameMusic = e.getAttribute("NameOfMusic");
         Swal.fire({
             title: 'آیا میخواهید این فایل را حذف کنید ؟',
             icon: 'info',

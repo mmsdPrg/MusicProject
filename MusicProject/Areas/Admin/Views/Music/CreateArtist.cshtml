@@ -1,0 +1,163 @@
+﻿@model AddArtistViewModel
+@{
+    ViewData["Title"] = "CreateArtist";
+    Layout = "~/Areas/Admin/Views/Shared/_Layout.cshtml";
+}
+<div class="content-wrapper">
+    <section class="content">
+        <div class="container-fluid">
+            <div class="row">
+                <!-- left column -->
+                <div class="col-12">
+                    <!-- general form elements -->
+                    <div class="card card-secondary">
+                        <div class="card-header">
+                            <h3 class="card-title">ثبت خواننده</h3>
+                        </div>
+                        <!-- /.card-header -->
+                        <!-- form start -->
+                        <form asp-action="CreateArtist" asp-controller="Music" enctype="multipart/form-data" method="post">
+                            <div class="card-body">
+                                <div class="form-group">
+                                    <label for="exampleInputEmail1">نام خواننده</label>
+                                    <input type="text" asp-for="ArtistName" class="form-control" placeholder="نام خواننده را وارد کنید">
+                                    <span style="color:red" asp-validation-for="ArtistName"></span>
+                                </div>
+                                <div class="form-group">
+                                    <label>کاور هنرمند:</label>
+
+                                    <div class="input-group">
+                                        <div class="input-group-prepend">
+                                            <span class="input-group-text"><i class="fa fa-image"></i></span>
+                                        </div>
+                                        <input asp-for="ArtistCover" name="ArtistCover" id="ImageCover" type="file" class="form-control"><br />
+
+                                    </div>
+                                    <!-- /.input group -->
+                                </div>
+                                <div class="row">
+                                    <div class="col-2">
+                                        <button style="display:none" id="ShowImg" class="btn btn-success">نمایش عکس</button>
+                                    </div>
+                                    <div class="col-2">
+                                        <button style="display:none" id="DeleteImg" class="btn btn-danger">حذف عکس</button>
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label for="exampleInputPassword1">بیوگرافی</label>
+                                    @*<input type="password" class="form-control" id="exampleInputPassword1" placeholder="پسورد را وارد کنید">*@
+                                    <textarea class="form-control" asp-for="Biography"></textarea>
+                                </div>
+
+                            </div>
+                            <!-- /.card-body -->
+
+                            <div class="card-footer">
+                                <button type="submit" class="btn btn-success">ثبت</button>
+                            </div>
+                        </form>
+                    </div>
+                    <!-- /.card -->
+                    <!-- Form Element sizes -->
+                    <!-- /.card -->
+
+                </div>
+                <!--/.col (left) -->
+                <!-- right column -->
+                <!--/.col (right) -->
+            </div>
+            <!-- /.row -->
+        </div><!-- /.container-fluid -->
+    </section>
+</div>
+<script>
+    $(() => {
+
+        $(ShowImg).click(function (event) {
+            event.preventDefault();
+            let img = $(ImageCover).attr('Base64');
+            SwalToShowImage(img)
+        })
+        $(DeleteImg).click(function (event) {
+            event.preventDefault();
+            $(ImageCover).val('');
+            $(ShowImg).css('display', 'none')
+            $(DeleteImg).css('display', 'none')
+        })
+        $(ImageCover).change(function (event) {
+            const Size = event.target.files[0].size;
+            const Extention = event.target.files[0].name.split('.')[1];
+            const Img = event.target.files[0]
+            let SizeImg = bytesToSize(Size).split(' ');
+
+            if (Extention.toLowerCase() == 'jpg' || Extention.toLowerCase() == 'png') {
+
+                if (SizeImg[1] == 'MB' && SizeImg[0] <= 2 || SizeImg[1] == 'KB') {
+                    let Reader = new FileReader();
+                    Reader.readAsDataURL(Img)
+                    Reader.onloadend = z => {
+                        SwalToShowImage(z.target.result)
+                        //document.getElementById(ImageCover).setAttribute('Base64',z.target.result)
+                        $(ImageCover).attr('Base64', z.target.result)
+                        $(ShowImg).css('display', 'block')
+                        $(DeleteImg).css('display', 'block')
+                    }
+
+
+                } else {
+                    swal.fire({
+                        title: "پیام",
+                        text: "حجم عکس باید از 2 مگ کمتر باشد",
+                        icon: "error",
+                        button: "باشه",
+                        timer: 3000
+                    })
+                    $(this).val('');
+                    $(ShowImg).css('display', 'none')
+                    $(DeleteImg).css('display', 'none')
+
+                    return false;
+                }
+
+            } else {
+                swal.fire({
+                    title: "پیام",
+                    text: "فرمت فایل مناسب نمی باشد",
+                    icon: "error",
+                    button: "باشه",
+                    timer: 3000
+                })
+                $(this).val('');
+                $(ShowImg).css('display', 'none')
+                $(DeleteImg).css('display', 'none')
+                return false;
+            }
+        })
+    })
+    const units = ['bytes', 'KB', 'MB', 'GB', 'TB', 'PB', 'EB', 'ZB', 'YB'];
+    function niceBytes(x) {
+
+        let l = 0, n = parseInt(x, 10) || 0;
+
+        while (n >= 1024 && ++l) {
+            n = n / 1024;
+        }
+
+        return (n.toFixed(n < 10 && l > 0 ? 1 : 0) + ' ' + units[l]);
+    }
+    function bytesToSize(bytes) {
+        var sizes = ['Bytes', 'KB', 'MB', 'GB', 'TB'];
+        if (bytes == 0) return '0 Byte';
+        var i = parseInt(Math.floor(Math.log(bytes) / Math.log(1024)));
+        return Math.round(bytes / Math.pow(1024, i), 2) + ' ' + sizes[i];
+    }
+    function SwalToShowImage(ImgUrl) {
+        swal.fire({
+            title: 'عکس انتخابی',
+            button: 'باشه',
+            imageUrl: ImgUrl,
+            imageWidth: 400,
+            imageHeight: 200,
+        })
+    }
+</script>

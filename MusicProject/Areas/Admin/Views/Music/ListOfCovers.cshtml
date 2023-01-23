@@ -1,0 +1,179 @@
+﻿
+@{
+    ViewData["Title"] = "ListOfCovers";
+    Layout = "~/Areas/Admin/Views/Shared/_Layout.cshtml";
+    var files = ViewData["File"] as IEnumerable<string>;
+    var MusicImage = ViewData["Artists"] as List<MusicImage>;
+    var IsInDatabase = ViewData["IsInDataBase"] as List<MusicImage>;
+}
+
+<head lang="en">
+
+    <style>
+        .pagination li {
+            background-color: transparent;
+            /*padding:10px;*/
+        }
+    </style>
+</head>
+
+<div class="content-wrapper" style="min-height: 724px;">
+    <!-- Content Header (Page header) -->
+    <section class="content-header">
+        <div class="container-fluid">
+        </div><!-- /.container-fluid -->
+    </section>
+
+    <!-- Main content -->
+    <section class="content">
+        <div class="container-fluid">
+            <!-- /.row -->
+            <div class="row">
+                <div class="col-12">
+                    <div class="card">
+                        <div class="card-header">
+                            <h3 class="card-title">مدیریت عکس ها</h3>
+
+                            <div class="card-tools">
+                                <div class="input-group input-group-sm" style="width: 150px;">
+                                    <input id='myInput' type="text" name="table_search" class="form-control float-right" onkeyup='searchTable()' placeholder="جستجو">
+
+                                    <div class="input-group-append">
+                                        <button type="submit" class="btn btn-default"><i class="fa fa-search"></i></button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <!-- /.card-header -->
+                        <div class="card-body table-responsive p-0">
+                            <table class="table table-hover" id='myTable'>
+                                <tbody>
+                                    <tr>
+                                        <th></th>
+                                        <th>نام موسیقی</th>
+                                        <th>عکس موسیفی</th>
+                                        <th>وضعیت</th>
+                                    </tr>
+                                    @foreach (var item in files)
+                                    {
+                                        string[] Split = item.Split('\\');
+                                        var MusicName = IsInDatabase.FirstOrDefault(z => z.ImgPath == Split[9]);
+                                        <tr>
+                                            <td>
+                                                @{
+                                                    <i href="#" onclick="SwalOpener(this)" NameOfMusic="@Split[9]" class="fa fa-trash" style="color:red;cursor:pointer" aria-hidden="true"></i>
+                                                }
+                                            </td>
+                                            <td>
+                                                @{
+                                                    if (MusicName != null)
+                                                    {
+                                                        <span>@MusicName.Music.Name</span>
+                                                    }
+                                                }
+                                            </td>
+                                            <td>
+                                                <img width="150" src="~/ImagesCover/@Split[9]" />
+                                            </td>
+                                            <td>
+
+                                                @{
+                                                    if (IsInDatabase.Any(z => z.ImgPath == Split[9]))
+                                                    {
+                                                        <span class="badge badge-success">
+                                                            فایل مفید
+                                                        </span>
+
+                                                    }
+                                                    else
+                                                    {
+                                                        <span class="badge badge-danger">
+                                                            فایل بی مصرف
+                                                        </span>
+                                                    }
+                                                }
+                                            </td>
+                                        </tr>
+                                    }
+
+
+                                </tbody>
+
+                            </table>
+                        </div>
+
+                        <!-- /.card-body -->
+                    </div>
+                    @Html.PagedListPager((IPagedList)files, Page => Url.Action("ListOfFile", "Music", new { Page = Page }),
+                    new X.PagedList.Web.Common.PagedListRenderOptions
+                    {
+                    ContainerDivClasses = new[] { "pagination" },
+                    //LiElementClasses = new[] { "active", "pl-3" },
+                    LiElementClasses = new[] { "page-item" },
+                    PageClasses = new[] { "page-link" },
+                    })
+                    <!-- /.card -->
+                </div>
+            </div><!-- /.row -->
+        </div><!-- /.container-fluid -->
+    </section>
+    <!-- /.content -->
+</div>
+
+@*//Search*@
+<script>
+    function searchTable() {
+        var input, filter, found, table, tr, td, i, j;
+        input = document.getElementById("myInput");
+        filter = input.value.toUpperCase();
+        table = document.getElementById("myTable");
+        tr = table.getElementsByTagName("tr");
+        for (i = 0; i < tr.length; i++) {
+            td = tr[i].getElementsByTagName("td");
+            for (j = 0; j < td.length; j++) {
+                if (td[j].innerHTML.toUpperCase().indexOf(filter) > -1) {
+                    found = true;
+                }
+            }
+            if (found) {
+                tr[i].style.display = "";
+                found = false;
+            } else {
+                tr[i].style.display = "none";
+            }
+        }
+    }
+</script>
+<script>
+    function SwalOpener(e) {
+        let nameMusic = e.getAttribute("NameOfMusic");
+        Swal.fire({
+            title: 'آیا میخواهید این فایل را حذف کنید ؟',
+            icon: 'info',
+            showDenyButton: true,
+            confirmButtonText: 'بله',
+            denyButtonText: `خیر`,
+        }).then((result) => {
+            /* Read more about isConfirmed, isDenied below */
+            if (result.isConfirmed) {
+                $.post("@Url.Action("DeleteImg","Music")", { Name: nameMusic }, reesponse => {
+                    if (reesponse.status == true) {
+                        window.location.reload(true);
+                        Swal.fire({
+                            icon: 'success',
+                            title: 'فایل با موفقیت حذف شد ',
+                        })
+                    } else {
+                        Swal.fire({
+                            icon: 'error',
+                            title: 'مشکلی به وجود آمد بعدا تلاش کنید ',
+                        })
+                    }
+                })
+
+
+            } else if (result.isDenied) {
+            }
+        })
+    }
+</script>

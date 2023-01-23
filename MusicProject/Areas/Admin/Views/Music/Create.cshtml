@@ -1,6 +1,7 @@
 ﻿@{
     ViewData["Title"] = "Create";
     Layout = "~/Areas/Admin/Views/Shared/_Layout.cshtml";
+    var Artists = ViewData["Artist"] as List<Artist>;
 }
 @model AddMusicViewModel
 <style>
@@ -8,16 +9,10 @@
         background: green;
         width: 33%;
         height: 30px;
-        .upload-button
-
-    {
-        background: #f0f0f0;
-        border-radius: 100px;
-        text-align: center;
-        position: relative;
-        width: 200px;
-        height: 200px;
+       
     }
+
+  
 
     .upload-button .label {
         line-height: 200px;
@@ -28,7 +23,7 @@
         width: 200px;
         height: 200px;
     }
-
+   
     .upload-button input {
         opacity: 0;
         cursor: pointer;
@@ -37,12 +32,7 @@
         height: 200px;
     }
 
-    .progress {
-        background: #f0f0f0;
-        margin-top: 30px;
-        display: none;
-        position: relative;
-    }
+    
 
         .progress .label {
             line-height: 30px;
@@ -54,6 +44,7 @@
             height: 30px;
         }
 </style>
+
 <div class="content-wrapper">
     <!-- Content Header (Page header) -->
     <!-- Main content -->
@@ -90,7 +81,7 @@
                                             <span class="input-group-text"><i class="fa fa-music"></i></span>
                                         </div>
                                         <input asp-for="MusicFile" id="mostanadPath" type="file" class="form-control">
-                                        <input type="button" onclick="UploadImage()" value="ثبت موسیقی" class="btn btn-outline-danger" id="btnUpLoad" />
+                                        <input type="button" onclick="UploadImage()" value="ثبت موسیقی" class="btn btn-outline-success" id="btnUpLoad" />
                                     </div>
                                     <div class="progress">
                                         <div class="progress-bar progress-bar-success progress-bar-striped
@@ -124,19 +115,16 @@
                                         <button style="display:none" id="DeleteImg" class="btn btn-danger">حذف عکس</button>
                                     </div>
                                 </div>
-                                <!-- /.form group -->
-                                <!-- IP mask -->
+
                                 <div class="form-group">
-                                    <label> نام خواننده:</label>
-
-                                    <div class="input-group">
-                                        <div class="input-group-prepend">
-                                            <span class="input-group-text"><i class="fa fa-user"></i></span>
-                                        </div>
-                                        <input asp-for="Artist" type="text" class="form-control"><br />
-
-                                    </div>
-                                    <!-- /.input group -->
+                                    <label>نام خواننده :</label>
+                                    <select required name="Artists" class="form-control select2" multiple="multiple" data-placeholder="خواننده ها را انتخاب کنید"
+                                            style="width: 100%;text-align: right">
+                                        @foreach (var item in Artists)
+                                        {
+                                            <option value="@item.id">@item.ArtistName</option>
+                                        }
+                                    </select>
                                 </div>
                                 <!-- /.form group -->
                                 <div class="form-group">
@@ -152,9 +140,8 @@
                                 </div>
                             </div>
                             <!-- /.card-body -->
-                                        <span style="color:red" asp-validation-for="Artist"></span><br />
-                                        <span style="color:red" asp-validation-for="MusicCover"></span><br />
-                                        <span style="color:red" asp-validation-for="Name"></span>
+                            <span style="color:red" asp-validation-for="MusicCover"></span><br />
+                            <span style="color:red" asp-validation-for="Name"></span>
                             <button class="btn btn-success" id="btnSendToServer" disabled type="submit">ایجاد موسیقی</button>
                         </div>
                         <!-- /.card -->
@@ -170,33 +157,32 @@
 <script src="~/lib/jquery/dist/jquery.js"></script>
 <script src="~/lib/jquery/dist/jquery.min.js"></script>
 @*<script>
-    $(() => {
-        $(btnCancel).click(function() {
-            var input = document.getElementById(files);
-            console.log(input)
-            var files = input.files[0].name;
+        $(() => {
+            $(btnCancel).click(function() {
+                var input = document.getElementById(files);
+                console.log(input)
+                var files = input.files[0].name;
 
-            $.post('/admin/uploader/CancelFile', { FileName: files }, data => {
-                alert(data)
+                $.post('/admin/uploader/CancelFile', { FileName: files }, data => {
+                    alert(data)
+                })
             })
         })
-    })
-</script>*@
+    </script>*@
 <script>
     $(() => {
-
-        $(ShowImg).click(function(event) {
+        $(ShowImg).click(function (event) {
             event.preventDefault();
             let img = $(ImageCover).attr('Base64');
             SwalToShowImage(img)
         })
-        $(DeleteImg).click(function(event) {
+        $(DeleteImg).click(function (event) {
             event.preventDefault();
             $(ImageCover).val('');
             $(ShowImg).css('display', 'none')
             $(DeleteImg).css('display', 'none')
         })
-        $(ImageCover).change(function(event) {
+        $(ImageCover).change(function (event) {
             const Size = event.target.files[0].size;
             const Extention = event.target.files[0].name.split('.')[1];
             const Img = event.target.files[0]
@@ -217,17 +203,17 @@
 
 
                 } else {
-                      swal.fire({
-                    title: "پیام",
-                    text: "حجم عکس باید از 2 مگ کمتر باشد",
-                    icon: "error",
-                    button: "باشه",
-                    timer: 3000
-                })
+                    swal.fire({
+                        title: "پیام",
+                        text: "حجم عکس باید از 2 مگ کمتر باشد",
+                        icon: "error",
+                        button: "باشه",
+                        timer: 3000
+                    })
                     $(this).val('');
                     $(ShowImg).css('display', 'none')
                     $(DeleteImg).css('display', 'none')
-                 
+
                     return false;
                 }
 
@@ -277,7 +263,7 @@
 
 
 <script>
-    $("#mostanadPath").change(function() {
+    $("#mostanadPath").change(function () {
         var filename = this.files[0].name;
         $("#spnImageCartMlie").html(filename);
     });
@@ -286,6 +272,8 @@
 <script>
 
     $(mostanadPath).change(z => {
+        $("#ResultUpload").html("")
+        $("#btnUpLoad").prop('disabled', false);
         let Ext = getExtension(z.target.files[0].name);
 
         if (Ext == "mp3" || Ext == "mp4") {
@@ -300,6 +288,8 @@
                 button: "باشه",
                 timer: 3000
             })
+            $('.progress-bar').width(0 + '%');
+            $('.progress-bar').html(0 + '%');
             $("#btnSendToServer").prop("disabled", true);
 
             $(mostanadPath).val("");
@@ -308,82 +298,90 @@
 
     })
 
-    var UploadImage = function() {
+    var UploadImage = function () {
 
         var data = new FormData;
         var file = $("#mostanadPath").get(0);
-        var files = file.files;
-        //File size control
-        //if (files[0].size >= 512000) {
-        //    $("#spnImageCartMlie").removeClass('hidden');
-        //    $("#spnImageCartMlie").text('The file size is more than 500 KB');
-        //    $("#spnImageCartMlie").css("color", "red");
-        //    return false;
-        //}
+        if (file.files[0] != null) {
 
-
-        for (var i = 0; i < files.length; i++) {
-            data.append('filearray', files[i]);
-            data.append('filesize', files[i].size);
-        }
-        data.append('path', "img\\mostandat\\");
-        $.ajax({
-            //add here......
-            xhr: function() {
-                var xhr = new window.XMLHttpRequest();
-
-                xhr.upload.addEventListener("progress", function(evt) {
-                    if (evt.lengthComputable) {
-                        var percentComplete = evt.loaded / evt.total;
-                        percentComplete = parseInt(percentComplete * 100);
-
-                        $('.progress-bar').width(percentComplete + '%');
-                        $('.progress-bar').html(percentComplete + '%');
-
-                    }
-                }, false);
-
-                return xhr;
-            },
-            type: "POST",
-            url: "/Admin/Music/UploadMuiscFile",
-            data: data,
-            contentType: false,
-            processData: false
-        }).done(function(result) {
-            if (result.status == "success") {
-                $("#ResultUpload").css("color", "green");
-                $("#ResultUpload").html("اپلود با موفقیت انجام شد")
-                //$("#mostanadPath").val("")
-                $("#btnSendToServer").prop("disabled", false);
-
-
-            } else if (result.status == "duplicate") {
-                $("#ResultUpload").css("color", "red");
-                $("#ResultUpload").html("این فایل تکراری می باشد")
-                $("#btnSendToServer").prop("disabled", true);
-                $("#mostanadPath").val("")
-
+            var files = file.files;
+            for (var i = 0; i < files.length; i++) {
+                data.append('filearray', files[i]);
+                data.append('filesize', files[i].size);
             }
-            else {
+            data.append('path', "img\\mostandat\\");
+            $.ajax({
+                //add here......
+                xhr: function () {
+                    var xhr = new window.XMLHttpRequest();
+
+                    xhr.upload.addEventListener("progress", function (evt) {
+                        if (evt.lengthComputable) {
+                            var percentComplete = evt.loaded / evt.total;
+                            percentComplete = parseInt(percentComplete * 100);
+
+                            $('.progress-bar').width(percentComplete + '%');
+                            $('.progress-bar').html(percentComplete + '%');
+
+                        }
+                    }, false);
+
+                    return xhr;
+                },
+                type: "POST",
+                url: "/Admin/Music/UploadMuiscFile",
+                data: data,
+                contentType: false,
+                processData: false
+            }).done(function (result) {
+                if (result.status == "success") {
+                    $("#ResultUpload").css("color", "green");
+                    $("#ResultUpload").html("اپلود با موفقیت انجام شد")
+                    $("#btnSendToServer").prop("disabled", false);
+                    $("#btnUpLoad").prop('disabled', true);
+
+                } else if (result.status == "duplicate") {
+                    $("#ResultUpload").css("color", "red");
+                    $("#ResultUpload").html("این فایل تکراری می باشد")
+                    $("#btnSendToServer").prop("disabled", true);
+                    $("#mostanadPath").val("")
+                    $('.progress-bar').width(0 + '%');
+                    $('.progress-bar').html(0 + '%');
+
+                }
+                else {
+                    $("#ResultUpload").css("color", "red");
+                    $("#ResultUpload").html("آپلود با شکست مواجه شد")
+                    $("#btnSendToServer").prop("disabled", true);
+                    $("#mostanadPath").val("")
+                    $('.progress-bar').width(0 + '%');
+                    $('.progress-bar').html(0 + '%');
+
+                }
+
+            }).fail(function (result) {
+
                 $("#ResultUpload").css("color", "red");
                 $("#ResultUpload").html("آپلود با شکست مواجه شد")
                 $("#btnSendToServer").prop("disabled", true);
-                $("#mostanadPath").val("")
 
-            }
+            });
 
-        }).fail(function(result) {
-
+            //$("#mostanadPath").val("")
+        } else {
             $("#ResultUpload").css("color", "red");
-            $("#ResultUpload").html("آپلود با شکست مواجه شد")
+            $("#ResultUpload").html("فایلی انتخاب نشده است")
             $("#btnSendToServer").prop("disabled", true);
-
-        });
-
-        //$("#mostanadPath").val("")
+        }
     }
+
     function getExtension(filename) {
         return filename.split(".").pop();
     }
+</script>
+<script>
+    $(function () {
+        //Initialize Select2 Elements
+        $('.select2').select2()
+    })
 </script>
