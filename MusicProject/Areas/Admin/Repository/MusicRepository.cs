@@ -31,6 +31,9 @@ namespace MusicProject.Areas.Admin.Repository
             music.MusicPath320 = model.MusicFile.FileName;
             music.Created = DateTime.Now;
             music.Description = model.Discription;
+
+            music.MusicDuration = model.TimeMusicDuration;
+            //کار نمیکند
             dB.Add(music);
             dB.SaveChanges();
             foreach (var item in Artists)
@@ -103,6 +106,7 @@ namespace MusicProject.Areas.Admin.Repository
                 music.MusicPath320 = Model.MusicFile.FileName;
             music.Created = DateTime.Now;
             music.Name = Model.Name;
+            music.MusicDuration = Model.TimeMusicDuration;
             music.Description = Model.Discription;
             dB.Update(music);
             if (music.Artists != null)
@@ -130,7 +134,7 @@ namespace MusicProject.Areas.Admin.Repository
                 {
                     foreach (var item in music.Imgs)
                     {
-                        dB.Remove(item);
+                        dB.MusicImage.Remove(item);
                         dB.SaveChanges();
                     }
                 }
@@ -142,8 +146,11 @@ namespace MusicProject.Areas.Admin.Repository
                 dB.Add(musicImage);
                 dB.SaveChanges();
                 string path = Path.Combine(WebRoot.WebRootPath, "ImagesCover", Model.MusicCover.FileName);
+                if (!System.IO.File.Exists(path))
+                {
                 FileStream file = new FileStream(path, FileMode.Create);
                 await Model.MusicCover.CopyToAsync(file);
+                }
             }
           
         }

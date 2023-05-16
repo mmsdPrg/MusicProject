@@ -29,10 +29,13 @@ namespace MusicProject.Areas.Admin.Repository
             {
                 Directory.CreateDirectory(FolderPath);
             }
-            string PathImage = Path.Combine(root.WebRootPath, "ArtistFile", model.ArtistCover.FileName);
-            var filestream = new FileStream(PathImage, FileMode.Create);
-            await model.ArtistCover.CopyToAsync(filestream);
-            artist.ImagePath = model.ArtistCover.FileName;
+            if (model.ArtistCover != null)
+            {
+                string PathImage = Path.Combine(root.WebRootPath, "ArtistFile", model.ArtistCover.FileName);
+                var filestream = new FileStream(PathImage, FileMode.Create);
+                await model.ArtistCover.CopyToAsync(filestream);
+                artist.ImagePath = model.ArtistCover.FileName;
+            }
             dB.Add(artist);
             if (dB.SaveChanges() != 0)
                 return 1;

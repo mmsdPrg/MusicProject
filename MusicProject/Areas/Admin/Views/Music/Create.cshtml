@@ -95,6 +95,21 @@
                                     @*<div id="progress" class="progress"><div id="bar" class="bar"></div><div id="label" class="label">0%</div></div>*@
                                     <!-- /.input group -->
                                 </div>
+                                <audio id="FileInsert" style="visibility:hidden">
+                                    <source class="AudioPlayed" type="audio/mp3" />
+                                </audio>
+                                <div class="form-group">
+                                    <label>زمان موسیقی:</label>
+
+                                    <div class="input-group" style="width:20%">
+                                        <div class="input-group-prepend">
+                                            <span class="input-group-text"><i class="fa fa-clock-o"></i></span>
+                                        </div>
+                                        <input name="TimeMusic" asp-for="TimeMusicDuration" id="TimeMusic" type="text" class="form-control"><br />
+
+                                    </div>
+                                    <!-- /.input group -->
+                                </div>
                                 <div class="form-group">
                                     <label>کاور موسیقی:</label>
 
@@ -188,7 +203,7 @@
             const Img = event.target.files[0]
             let SizeImg = bytesToSize(Size).split(' ');
 
-            if (Extention.toLowerCase() == 'jpg' || Extention.toLowerCase() == 'png') {
+            if (Extention.toLowerCase() == 'jpg') {
 
                 if (SizeImg[1] == 'MB' && SizeImg[0] <= 2 || SizeImg[1] == 'KB') {
                     let Reader = new FileReader();
@@ -300,7 +315,7 @@
 
     var UploadImage = function () {
 
-        var data = new FormData;
+        var data = new FormData();
         var file = $("#mostanadPath").get(0);
         if (file.files[0] != null) {
 
@@ -340,6 +355,25 @@
                     $("#btnSendToServer").prop("disabled", false);
                     $("#btnUpLoad").prop('disabled', true);
 
+                    var audio = document.querySelector(".AudioPlayed");
+                    var audioParent = document.querySelector("#FileInsert");
+                    audio.src = "/uploads/" + file.files[0].name
+                    audioParent.load();
+                    var timer = setTimeout(function ()
+                    {
+                        var x = document.getElementById("FileInsert").duration;
+                        const minutes = Math.floor(x / 60)
+                        const seconds = Math.floor(x - minutes * 60);
+                        if (seconds < 10) {
+                            $("#TimeMusic").text(minutes +":" +"0" + seconds);
+                            $("#TimeMusic").attr("value",minutes +":" +"0" + seconds);
+                        } else {
+                            $("#TimeMusic").text(minutes + ":" + seconds);
+                            $("#TimeMusic").attr("value", minutes + ":" + seconds);
+
+                        }
+                    },1000)
+                   
                 } else if (result.status == "duplicate") {
                     $("#ResultUpload").css("color", "red");
                     $("#ResultUpload").html("این فایل تکراری می باشد")

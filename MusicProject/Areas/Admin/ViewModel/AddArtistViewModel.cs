@@ -15,5 +15,8 @@ namespace MusicProject.Areas.Admin.ViewModel
         public string ArtistName { get; set; }
         public string Biography { get; set; }
         public IFormFile ArtistCover { get; set; }
+
+        [Required(ErrorMessage = "ایدی اینستاگرام اجباری است")]
+        public string InstagramId { get; set; }
     }
 }

@@ -14,5 +14,6 @@ namespace MusicProject.Models
         public double CountOfPlays { get; set; }
         public DateTime Created { get; set; }
         public ICollection<ArtistMusic> Artists { get; set; }
+        public string MusicDuration { get; set; }
     }
 }

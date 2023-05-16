@@ -15,5 +15,6 @@ namespace MusicProject.Areas.Admin.ViewModel
         //[Required(ErrorMessage = "خواننده آهنگ ضروری است")]
         //public List<string> Artists  { get; set; }
         public string Discription  { get; set; }
+        public string TimeMusicDuration { get; set; }
     }
 }

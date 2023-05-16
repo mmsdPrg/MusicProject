@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using MusicProject.Data;
+using MusicProject.Models;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -23,14 +24,18 @@ namespace MusicProject.Controllers
         {
             ViewData["Artists"] = db.Artists.ToList();
             ViewData["RecentlyAdded"] = db.Music.Include(z => z.Artists).ThenInclude(z => z.Artist).Include(z => z.Imgs).OrderByDescending(z => z.Id).Take(11).ToList();
+            ViewData["AllMusic"] = db.Music.Include(z => z.Artists).ThenInclude(z => z.Artist).ToList();
             return View();
         }
-       
+     
         [Route("/NotFound")]
         public IActionResult PageNotFound()
         {
             return View();
         }
+
+       
+
 
     }
 }

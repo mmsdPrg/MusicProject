@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using MusicProject.Data;
+using MusicProject.Models;
 using MusicProject.ViewModel;
 using System;
 using System.Collections.Generic;
@@ -34,6 +35,40 @@ namespace MusicProject.Controllers
                 Joins = string.Join(',', Names);
             }
             return Json(new { id = Id, name = Music.Name,musicRoot=Music.MusicPath320, artists = Joins,imagePath=Image});
+        }
+
+        public IActionResult CountOfPlays(int? Id)
+        {
+            if(Id!=null || Id != 0)
+            {
+                var Music = db.Music.FirstOrDefault(z => z.Id == Id);
+                Music.CountOfPlays++;
+                db.SaveChanges();
+                return Json(new { counts = Music.CountOfPlays });
+            }
+            return Json(new { counts = 0 });
+          
+            
+        }
+        public IActionResult ArtistPage(int id)
+        {
+            Artist artist = db.Artists.Include(z => z.Musics).ThenInclude(z => z.Music).ThenInclude(z => z.Imgs).FirstOrDefault(z => z.id == id);
+            return View(artist);
+        }
+        public JsonResult LastMusic()
+        {
+            var Object = db.Music.Include(z=>z.Imgs).Include(z=>z.Artists).ThenInclude(z=>z.Artist).OrderBy(z => z.Created).ToList().LastOrDefault();
+            List<string> NameArtist = new List<string>();
+            foreach (var item in Object.Artists)
+            {
+                NameArtist.Add(item.Artist.ArtistName);
+            }
+            string Artists =string.Join("-",NameArtist);
+            return Json(new {MusicName= Object.Name,Img=Object.Imgs[0].ImgPath,Artists=Artists,MusicPath=Object.MusicPath320});
+        }
+        public IActionResult ArtistsPage()
+        {
+            return View();
         }
     }
 }

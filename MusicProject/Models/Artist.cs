@@ -12,6 +12,7 @@ namespace MusicProject.Models
         public float Score { get; set; }
         public string ImagePath { get; set; }
         public string Biography { get; set; }
+        public string InstagramID { get; set; }
         public ICollection<ArtistMusic> Musics { get; set; }
     }
 }

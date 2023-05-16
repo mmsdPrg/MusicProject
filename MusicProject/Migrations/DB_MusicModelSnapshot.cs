@@ -241,6 +241,9 @@ namespace MusicProject.Migrations
                     b.Property<string>("ImagePath")
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<string>("InstagramID")
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<float>("Score")
                         .HasColumnType("real");
 
@@ -278,6 +281,9 @@ namespace MusicProject.Migrations
                         .HasColumnType("datetime2");
 
                     b.Property<string>("Description")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("MusicDuration")
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("MusicPath320")

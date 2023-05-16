@@ -41,7 +41,7 @@ namespace MusicProject.Areas.Admin.Controllers
             var exists = System.IO.File.Exists(Paths);
             if (exists == true)
             {
-                return Json(new { status = "duplicate", imagename = "" });
+                return Json(new { status = "duplicate", imagename = "",pathMusic=Paths });
             }
             else
             {
@@ -49,7 +49,7 @@ namespace MusicProject.Areas.Admin.Controllers
                 await filearray.CopyToAsync(fileStream);
                 TempData["MSG"] = "ذخیره شد";
                 HttpContext.Session.SetString("MusicPath", filearray.FileName);
-                return Json(new { status = "success", imagename = "" });
+                return Json(new { status = "success", imagename = "" ,pathMusic=Paths});
             }
 
         }
@@ -58,8 +58,9 @@ namespace MusicProject.Areas.Admin.Controllers
             ViewData["Artist"] = db.Artists.ToList();
             return View();
         }
-        public async Task<IActionResult> CreateMusic(AddMusicViewModel model, [FromServices] IMapper mapper, List<string> Artists)
+        public async Task<IActionResult> CreateMusic(AddMusicViewModel model, [FromServices] IMapper mapper, List<string> Artists,string TimeMusic)
         {
+            model.TimeMusicDuration = TimeMusic;
             int Success = await Repo.Create(model, mapper, Artists);
             if (Success == 1)
                 TempData["Suc"] = "موزیک ثبت شد";

@@ -78,7 +78,7 @@
 
                                     <div class="input-group">
                                         <audio id="CurrentMusic" controls>
-                                            <source src="~/uploads/@Model.MusicPath320" type="audio/mp3" />
+                                            <source class="AudioPlayedCurrent" src="~/uploads/@Model.MusicPath320" type="audio/mp3" />
                                         </audio>
                                         <input id="mostanadPath" type="file" value="@Model.MusicPath320" name="MusicFile" class="form-control">
                                         <input type="button" onclick="UploadEditMusic()" value="ثبت موسیقی" class="btn btn-outline-warning" id="btnUpLoad" />
@@ -91,16 +91,31 @@
                                         </div>
                                     </div>
                                     @*<div class="input-group">
-                                            <div class="input-group-prepend">
-                                                <span class="input-group-text"><i class="fa fa-music"></i></span>
-                                            </div>
-                                            <input id="mostanadPath" type="file" value="@Model.MusicPath320" class="form-control">
-                                            <input type="button" onclick="UploadImage()" value="ثبت موسیقی" class="btn btn-outline-success" id="btnUpLoad" />
-                                        </div>*@
+                <div class="input-group-prepend">
+                    <span class="input-group-text"><i class="fa fa-music"></i></span>
+                </div>
+                <input id="mostanadPath" type="file" value="@Model.MusicPath320" class="form-control">
+                <input type="button" onclick="UploadImage()" value="ثبت موسیقی" class="btn btn-outline-success" id="btnUpLoad" />
+            </div>*@
 
 
 
                                     <label id="ResultUpload"></label>
+                                </div>
+                                <audio id="FileInsert" style="visibility:hidden">
+                                    <source class="AudioPlayed" type="audio/mp3" />
+                                </audio>
+                                <div class="form-group">
+                                    <label>زمان موسیقی:</label>
+
+                                    <div class="input-group" style="width:20%">
+                                        <div class="input-group-prepend">
+                                            <span class="input-group-text"><i class="fa fa-clock-o"></i></span>
+                                        </div>
+                                        <input asp-for="MusicDuration" name="TimeMusicDuration" value="@Model.MusicDuration"  id="TimeMusic" type="text" class="form-control"><br />
+
+                                    </div>
+                                    <!-- /.input group -->
                                 </div>
                                 <div class="form-group">
                                     <label>کاور موسیقی:</label>
@@ -110,7 +125,7 @@
                                         </div>
                                         @if (Model.Imgs.Count > 0)
                                         {
-                                        <input id="ImageCover" value="@Model.Imgs[0].ImgPath"  name="MusicCover" type="file" class="form-control"><br />
+                                            <input id="ImageCover" value="@Model.Imgs[0].ImgPath" name="MusicCover" type="file" class="form-control"><br />
                                         }
                                         else
                                         {
@@ -123,7 +138,7 @@
                                     @foreach (var item in Model.Imgs)
                                     {
                                         string PathImg = item.ImgPath;
-                                        <i id="@item.Id" onclick="DeleteImageMusic(@item.Id)" class="fa fa-trash" style="color:red;cursor:pointer" aria-hidden="true"></i>
+                                        <i id="@item.Id" onclick="DeleteImageMusic(@item.Id)" class="fa fa-trash ExistsImage" style="color:red;cursor:pointer" aria-hidden="true"></i>
                                         <img width="140" src="~/ImagesCover/@PathImg" />
                                     }
                                 </div>
@@ -219,6 +234,23 @@
                         $(ImageCover).attr('Base64', z.target.result)
                         $(ShowImg).css('display', 'block')
                         $(DeleteImg).css('display', 'block')
+
+                        if ($(".ExistsImage").length > 0) {
+
+                            var ID = $(".ExistsImage").attr('id');
+                            if (ID != null) {
+                                $.post("@Url.Action("DeleteImageMusic","Music")", { id: ID }, result => {
+                                    if (result == true) {
+                                        $(`#${ID}`).next().remove();
+                                        $(`#${ID}`).remove();
+                                    }
+
+                                })
+                            }
+
+
+
+                        }
                     }
 
 
@@ -289,6 +321,19 @@
         $("#btnSendToServer").prop('disabled', true);
 
     });
+
+    $("#btnSendToServer").click(function (event) {
+        if ($("#ShowImg").css('display') == 'none' && $('.ExistsImage').length == 0) {
+            event.preventDefault();
+            swal.fire({
+                title: "پیام",
+                text: "کاور موسیقی انتخاب نشده است",
+                icon: "error",
+                button: "باشه",
+                timer: 3000
+            })
+        }
+    })
 </script>
 
 <script>
@@ -360,7 +405,29 @@
                     $("#ResultUpload").html("اپلود با موفقیت انجام شد")
                     $("#btnUpLoad").prop('disabled', true);
                     $("#btnSendToServer").prop('disabled', false);
-                   
+
+
+                    var audio = document.querySelector(".AudioPlayed");
+                    var audioCurrent = document.querySelector(".AudioPlayedCurrent");
+                    var audioParent = document.querySelector("#FileInsert");
+                    var audioParentCurrent = document.querySelector("#CurrentMusic");
+                    audio.src = "/uploads/" + file.files[0].name
+                    audioCurrent.src = "/uploads/" + file.files[0].name
+                    audioParent.load();
+                    audioParentCurrent.load();
+                    var timer = setTimeout(function () {
+                        var x = document.getElementById("FileInsert").duration;
+                        const minutes = Math.floor(x / 60)
+                        const seconds = Math.floor(x - minutes * 60);
+                        if (seconds < 10) {
+                            $("#TimeMusic").text(minutes + ":" + "0" + seconds);
+                            $("#TimeMusic").attr("value", minutes + ":" + "0" + seconds);
+                        } else {
+                            $("#TimeMusic").text(minutes + ":" + seconds);
+                            $("#TimeMusic").attr("value", minutes + ":" + seconds);
+
+                        }
+                    }, 1000)
 
                 } else if (result.status == "duplicate") {
                     $("#ResultUpload").css("color", "red");
@@ -410,6 +477,8 @@
     function getExtension(filename) {
         return filename.split(".").pop();
     }
+
+
 </script>
 <script>
     $(function () {
