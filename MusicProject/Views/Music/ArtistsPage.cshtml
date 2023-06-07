@@ -2,14 +2,17 @@
 @{
     ViewData["Title"] = "ArtistsPage";
     Layout = "~/Views/Shared/_Layout.cshtml";
+
+    var Artists = ViewData["Artists"] as IEnumerable<Artist>;
 }
+
 <div class="container-fluid" data-select2-id="12">
     <!-- artists -->
     <div class="row row--grid">
         <!-- breadcrumb -->
         <div class="col-12">
             <ul class="breadcrumb">
-                <li class="breadcrumb__item"><a href="index.html">صفحه اصلی</a></li>
+                <li class="breadcrumb__item"><a href="/home/index">صفحه اصلی</a></li>
                 <li class="breadcrumb__item breadcrumb__item--active">هنرمندان</li>
             </ul>
         </div>
@@ -27,11 +30,9 @@
         <div class="col-12" data-select2-id="10">
             <div class="main__filter" data-select2-id="9">
                 <form action="#" class="main__filter-search">
-                    <input type="text" placeholder="جست و جو ...">
-                    <button type="button"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21.71,20.29,18,16.61A9,9,0,1,0,16.61,18l3.68,3.68a1,1,0,0,0,1.42,0A1,1,0,0,0,21.71,20.29ZM11,18a7,7,0,1,1,7-7A7,7,0,0,1,11,18Z"></path></svg></button>
+                    <input type="text" id="myInput" onkeyup="Search()" placeholder="جست و جو ...">
                 </form>
-
-                <div class="main__filter-wrap" data-select2-id="8">
+                <div class="main__filter-wrap" data-select2-id="8" style="visibility:hidden">
                     <select class="main__select select2-hidden-accessible" name="genres" data-select2-id="1" tabindex="-1" aria-hidden="true">
                         <option value="all" data-select2-id="3">همه هنرمندان</option>
                         <option value="legacy" data-select2-id="28">آثار هنرمندان</option>
@@ -55,314 +56,99 @@
                 </div>
 
                 <div class="slider-radio">
-                    <input type="radio" name="grade" id="featured" checked="checked"><label for="featured" style="">ویژه</label>
                     <input type="radio" name="grade" id="popular"><label for="popular">محبوب</label>
-                    <input type="radio" name="grade" id="newest"><label for="newest">جدیدترین</label>
+                    <input type="radio" name="grade" id="All"><label for="All">همه</label>
+                    <input type="radio" name="grade" onclick="newestArtist()" id="newest"><label for="newest">جدیدترین</label>
                     <div class="sliding-piece" style="position: absolute; transition: width 0.2s ease 0s, height 0.2s ease 0s, top 0.2s ease 0s, left 0.2s ease 0s; opacity: 0; left: 195px; top: 5px; width: 55.9062px; height: 30px;"></div>
                 </div>
             </div>
+            <div class="row row--grid" id="DivArtist">
+                @foreach (var item in Artists)
+                {
 
-            <div class="row row--grid">
-                <div class="col-6 col-sm-4 col-md-3 col-xl-2">
-                    <a href="artist.html" class="artist">
-                        <div class="artist__cover">
-                            <img src="img/artists/artist1.jpg" alt="">
-                        </div>
-                        <h3 class="artist__title">مهراد خمیری</h3>
-                    </a>
-                </div>
+                    var ImgPath = item.ImagePath;
 
-                <div class="col-6 col-sm-4 col-md-3 col-xl-2">
-                    <a href="artist.html" class="artist">
-                        <div class="artist__cover">
-                            <img src="img/artists/artist2.jpg" alt="">
-                        </div>
-                        <h3 class="artist__title">مهراد خمیری</h3>
-                    </a>
-                </div>
-
-                <div class="col-6 col-sm-4 col-md-3 col-xl-2">
-                    <a href="artist.html" class="artist">
-                        <div class="artist__cover">
-                            <img src="img/artists/artist3.jpg" alt="">
-                        </div>
-                        <h3 class="artist__title">ابوالفضل قاسمی</h3>
-                    </a>
-                </div>
-
-                <div class="col-6 col-sm-4 col-md-3 col-xl-2">
-                    <a href="artist.html" class="artist">
-                        <div class="artist__cover">
-                            <img src="img/artists/artist4.jpg" alt="">
-                        </div>
-                        <h3 class="artist__title">مهراد خمیری</h3>
-                    </a>
-                </div>
-
-                <div class="col-6 col-sm-4 col-md-3 col-xl-2">
-                    <a href="artist.html" class="artist">
-                        <div class="artist__cover">
-                            <img src="img/artists/artist5.jpg" alt="">
-                        </div>
-                        <h3 class="artist__title">مهراد خمیری</h3>
-                    </a>
-                </div>
-
-                <div class="col-6 col-sm-4 col-md-3 col-xl-2">
-                    <a href="artist.html" class="artist">
-                        <div class="artist__cover">
-                            <img src="img/artists/artist6.jpg" alt="">
-                        </div>
-                        <h3 class="artist__title">مهراد خمیری</h3>
-                    </a>
-                </div>
-
-                <div class="col-6 col-sm-4 col-md-3 col-xl-2">
-                    <a href="artist.html" class="artist">
-                        <div class="artist__cover">
-                            <img src="img/artists/artist7.jpg" alt="">
-                        </div>
-                        <h3 class="artist__title">مهراد خمیری</h3>
-                    </a>
-                </div>
-
-                <div class="col-6 col-sm-4 col-md-3 col-xl-2">
-                    <a href="artist.html" class="artist">
-                        <div class="artist__cover">
-                            <img src="img/artists/artist8.jpg" alt="">
-                        </div>
-                        <h3 class="artist__title">مهراد خمیری</h3>
-                    </a>
-                </div>
-
-                <div class="col-6 col-sm-4 col-md-3 col-xl-2">
-                    <a href="artist.html" class="artist">
-                        <div class="artist__cover">
-                            <img src="img/artists/artist1.jpg" alt="">
-                        </div>
-                        <h3 class="artist__title">مهراد خمیری</h3>
-                    </a>
-                </div>
-
-                <div class="col-6 col-sm-4 col-md-3 col-xl-2">
-                    <a href="artist.html" class="artist">
-                        <div class="artist__cover">
-                            <img src="img/artists/artist2.jpg" alt="">
-                        </div>
-                        <h3 class="artist__title">مهراد خمیری</h3>
-                    </a>
-                </div>
-
-                <div class="col-6 col-sm-4 col-md-3 col-xl-2">
-                    <a href="artist.html" class="artist">
-                        <div class="artist__cover">
-                            <img src="img/artists/artist3.jpg" alt="">
-                        </div>
-                        <h3 class="artist__title">ابوالفضل قاسمی</h3>
-                    </a>
-                </div>
-
-                <div class="col-6 col-sm-4 col-md-3 col-xl-2">
-                    <a href="artist.html" class="artist">
-                        <div class="artist__cover">
-                            <img src="img/artists/artist4.jpg" alt="">
-                        </div>
-                        <h3 class="artist__title">مهراد خمیری</h3>
-                    </a>
-                </div>
-
-                <div class="col-6 col-sm-4 col-md-3 col-xl-2">
-                    <a href="artist.html" class="artist">
-                        <div class="artist__cover">
-                            <img src="img/artists/artist5.jpg" alt="">
-                        </div>
-                        <h3 class="artist__title">مهراد خمیری</h3>
-                    </a>
-                </div>
-
-                <div class="col-6 col-sm-4 col-md-3 col-xl-2">
-                    <a href="artist.html" class="artist">
-                        <div class="artist__cover">
-                            <img src="img/artists/artist6.jpg" alt="">
-                        </div>
-                        <h3 class="artist__title">مهراد خمیری</h3>
-                    </a>
-                </div>
-
-                <div class="col-6 col-sm-4 col-md-3 col-xl-2">
-                    <a href="artist.html" class="artist">
-                        <div class="artist__cover">
-                            <img src="img/artists/artist7.jpg" alt="">
-                        </div>
-                        <h3 class="artist__title">مهراد خمیری</h3>
-                    </a>
-                </div>
-
-                <div class="col-6 col-sm-4 col-md-3 col-xl-2">
-                    <a href="artist.html" class="artist">
-                        <div class="artist__cover">
-                            <img src="img/artists/artist8.jpg" alt="">
-                        </div>
-                        <h3 class="artist__title">مهراد خمیری</h3>
-                    </a>
-                </div>
-
-                <div class="col-6 col-sm-4 col-md-3 col-xl-2">
-                    <a href="artist.html" class="artist">
-                        <div class="artist__cover">
-                            <img src="img/artists/artist1.jpg" alt="">
-                        </div>
-                        <h3 class="artist__title">مهراد خمیری</h3>
-                    </a>
-                </div>
-
-                <div class="col-6 col-sm-4 col-md-3 col-xl-2">
-                    <a href="artist.html" class="artist">
-                        <div class="artist__cover">
-                            <img src="img/artists/artist2.jpg" alt="">
-                        </div>
-                        <h3 class="artist__title">مهراد خمیری</h3>
-                    </a>
-                </div>
+                    <div class="col-6 col-sm-4 col-md-3 col-xl-2">
+                        <a href="@Url.Action("ArtistPage","Music")/@item.id" class="artist">
+                            <div class="artist__cover">
+                                @if (ImgPath != null)
+                                {
+                                    <img src="~/ArtistFile/@ImgPath" alt="">
+                                }
+                                else
+                                {
+                                    <img src="~/Template/img/artists/artist1.jpg" alt="">
+                                }
+                            </div>
+                            <h3 class="artist__title">@item.ArtistName</h3>
+                        </a>
+                    </div>
+                }
             </div>
 
-            <button class="main__load" type="button">بیشتر ببین</button>
         </div>
     </div>
-    <!-- end artists -->
-    <!-- events -->
-    <section class="row row--grid">
-        <!-- title -->
-        <div class="col-12">
-            <div class="main__title">
-                <h2>رویداد های آینده</h2>
-
-                <a href="events.html" class="main__link">دیدن همه <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M17.92,11.62a1,1,0,0,0-.21-.33l-5-5a1,1,0,0,0-1.42,1.42L14.59,11H7a1,1,0,0,0,0,2h7.59l-3.3,3.29a1,1,0,0,0,0,1.42,1,1,0,0,0,1.42,0l5-5a1,1,0,0,0,.21-.33A1,1,0,0,0,17.92,11.62Z"></path></svg></a>
-            </div>
-        </div>
-        <!-- end title -->
-
-        <div class="col-12">
-            <div class="main__carousel-wrap">
-                <div class="main__carousel main__carousel--events owl-carousel owl-loaded" id="events">
-
-
-
-
-
-
-
-
-
-
-
-                    <div class="owl-stage-outer owl-height" style="height: 356px;">
-                        <div class="owl-stage" style="transform: translate3d(-1274px, 0px, 0px); transition: all 0s ease 0s; width: 5097px;">
-                            <div class="owl-item cloned" style="width: 394.667px; margin-right: 30px;">
-                                <div class="event" data-bg="img/events/event4.jpg" style="background: url(&quot;img/events/event4.jpg&quot;) center center / cover no-repeat;">
-                                    <a href="#modal-ticket" class="event__ticket open-modal"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9,10a1,1,0,0,0-1,1v2a1,1,0,0,0,2,0V11A1,1,0,0,0,9,10Zm12,1a1,1,0,0,0,1-1V6a1,1,0,0,0-1-1H3A1,1,0,0,0,2,6v4a1,1,0,0,0,1,1,1,1,0,0,1,0,2,1,1,0,0,0-1,1v4a1,1,0,0,0,1,1H21a1,1,0,0,0,1-1V14a1,1,0,0,0-1-1,1,1,0,0,1,0-2ZM20,9.18a3,3,0,0,0,0,5.64V17H10a1,1,0,0,0-2,0H4V14.82A3,3,0,0,0,4,9.18V7H8a1,1,0,0,0,2,0H20Z"></path></svg>خرید بلیط</a>
-                                    <span class="event__date">07 بهمن 1400</span>
-                                    <span class="event__time">6:00 بعد از ظهر</span>
-                                    <h3 class="event__title"><a href="event.html">لورم ایپسوم</a></h3>
-                                    <p class="event__address">لورم ایپسوم متن ساختگی با تولید سادگی نامفهوم از صنعت چاپ</p>
-                                </div>
-                            </div><div class="owl-item cloned" style="width: 394.667px; margin-right: 30px;">
-                                <div class="event" data-bg="img/events/event5.jpg" style="background: url(&quot;img/events/event5.jpg&quot;) center center / cover no-repeat;">
-                                    <span class="event__out">فروخته شده</span>
-                                    <span class="event__date">07 بهمن 1400</span>
-                                    <span class="event__time">10:00 بعد از ظهر</span>
-                                    <h3 class="event__title"><a href="event.html">لورم ایپسوم</a></h3>
-                                    <p class="event__address">لورم ایپسوم متن ساختگی با تولید سادگی نامفهوم از صنعت چاپ</p>
-                                </div>
-                            </div><div class="owl-item cloned" style="width: 394.667px; margin-right: 30px;">
-                                <div class="event" data-bg="img/events/event6.jpg" style="background: url(&quot;img/events/event6.jpg&quot;) center center / cover no-repeat;">
-                                    <a href="#modal-ticket" class="event__ticket open-modal"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9,10a1,1,0,0,0-1,1v2a1,1,0,0,0,2,0V11A1,1,0,0,0,9,10Zm12,1a1,1,0,0,0,1-1V6a1,1,0,0,0-1-1H3A1,1,0,0,0,2,6v4a1,1,0,0,0,1,1,1,1,0,0,1,0,2,1,1,0,0,0-1,1v4a1,1,0,0,0,1,1H21a1,1,0,0,0,1-1V14a1,1,0,0,0-1-1,1,1,0,0,1,0-2ZM20,9.18a3,3,0,0,0,0,5.64V17H10a1,1,0,0,0-2,0H4V14.82A3,3,0,0,0,4,9.18V7H8a1,1,0,0,0,2,0H20Z"></path></svg>خرید بلیط</a>
-                                    <span class="event__date">07 بهمن 1400</span>
-                                    <span class="event__time">6:30 بعد از ظهر</span>
-                                    <h3 class="event__title"><a href="event.html">لورم ایپسوم</a></h3>
-                                    <p class="event__address">لورم ایپسوم متن ساختگی با تولید سادگی نامفهوم از صنعت چاپ</p>
-                                </div>
-                            </div><div class="owl-item active" style="width: 394.667px; margin-right: 30px;">
-                                <div class="event" data-bg="img/events/event1.jpg" style="background: url(&quot;img/events/event1.jpg&quot;) center center / cover no-repeat;">
-                                    <a href="#modal-ticket" class="event__ticket open-modal"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9,10a1,1,0,0,0-1,1v2a1,1,0,0,0,2,0V11A1,1,0,0,0,9,10Zm12,1a1,1,0,0,0,1-1V6a1,1,0,0,0-1-1H3A1,1,0,0,0,2,6v4a1,1,0,0,0,1,1,1,1,0,0,1,0,2,1,1,0,0,0-1,1v4a1,1,0,0,0,1,1H21a1,1,0,0,0,1-1V14a1,1,0,0,0-1-1,1,1,0,0,1,0-2ZM20,9.18a3,3,0,0,0,0,5.64V17H10a1,1,0,0,0-2,0H4V14.82A3,3,0,0,0,4,9.18V7H8a1,1,0,0,0,2,0H20Z"></path></svg>خرید بلیط</a>
-                                    <span class="event__date">07 بهمن 1400</span>
-                                    <span class="event__time">8:00 بعد از ظهر</span>
-                                    <h3 class="event__title"><a href="event.html">لورم ایپسوم</a></h3>
-                                    <p class="event__address">لورم ایپسوم متن ساختگی با تولید سادگی نامفهوم از صنعت چاپ</p>
-                                </div>
-                            </div><div class="owl-item active" style="width: 394.667px; margin-right: 30px;">
-                                <div class="event" data-bg="img/events/event2.jpg" style="background: url(&quot;img/events/event2.jpg&quot;) center center / cover no-repeat;">
-                                    <a href="#modal-ticket" class="event__ticket open-modal"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9,10a1,1,0,0,0-1,1v2a1,1,0,0,0,2,0V11A1,1,0,0,0,9,10Zm12,1a1,1,0,0,0,1-1V6a1,1,0,0,0-1-1H3A1,1,0,0,0,2,6v4a1,1,0,0,0,1,1,1,1,0,0,1,0,2,1,1,0,0,0-1,1v4a1,1,0,0,0,1,1H21a1,1,0,0,0,1-1V14a1,1,0,0,0-1-1,1,1,0,0,1,0-2ZM20,9.18a3,3,0,0,0,0,5.64V17H10a1,1,0,0,0-2,0H4V14.82A3,3,0,0,0,4,9.18V7H8a1,1,0,0,0,2,0H20Z"></path></svg>خرید بلیط</a>
-                                    <span class="event__date">07 بهمن 1400</span>
-                                    <span class="event__time">7:00 بعد از ظهر</span>
-                                    <h3 class="event__title"><a href="event.html">لورم ایپسوم</a></h3>
-                                    <p class="event__address">لورم ایپسوم متن ساختگی با تولید سادگی نامفهوم از صنعت چاپ</p>
-                                </div>
-                            </div><div class="owl-item active" style="width: 394.667px; margin-right: 30px;">
-                                <div class="event" data-bg="img/events/event3.jpg" style="background: url(&quot;img/events/event3.jpg&quot;) center center / cover no-repeat;">
-                                    <span class="event__out">فروخته شده</span>
-                                    <span class="event__date">07 بهمن 1399</span>
-                                    <span class="event__time">9:30 بعد از ظهر</span>
-                                    <h3 class="event__title"><a href="event.html">لورم ایپسوم</a></h3>
-                                    <p class="event__address">لورم ایپسوم متن ساختگی با تولید سادگی نامفهوم از صنعت چاپ</p>
-                                </div>
-                            </div><div class="owl-item" style="width: 394.667px; margin-right: 30px;">
-                                <div class="event" data-bg="img/events/event4.jpg" style="background: url(&quot;img/events/event4.jpg&quot;) center center / cover no-repeat;">
-                                    <a href="#modal-ticket" class="event__ticket open-modal"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9,10a1,1,0,0,0-1,1v2a1,1,0,0,0,2,0V11A1,1,0,0,0,9,10Zm12,1a1,1,0,0,0,1-1V6a1,1,0,0,0-1-1H3A1,1,0,0,0,2,6v4a1,1,0,0,0,1,1,1,1,0,0,1,0,2,1,1,0,0,0-1,1v4a1,1,0,0,0,1,1H21a1,1,0,0,0,1-1V14a1,1,0,0,0-1-1,1,1,0,0,1,0-2ZM20,9.18a3,3,0,0,0,0,5.64V17H10a1,1,0,0,0-2,0H4V14.82A3,3,0,0,0,4,9.18V7H8a1,1,0,0,0,2,0H20Z"></path></svg>خرید بلیط</a>
-                                    <span class="event__date">07 بهمن 1400</span>
-                                    <span class="event__time">6:00 بعد از ظهر</span>
-                                    <h3 class="event__title"><a href="event.html">لورم ایپسوم</a></h3>
-                                    <p class="event__address">لورم ایپسوم متن ساختگی با تولید سادگی نامفهوم از صنعت چاپ</p>
-                                </div>
-                            </div><div class="owl-item" style="width: 394.667px; margin-right: 30px;">
-                                <div class="event" data-bg="img/events/event5.jpg" style="background: url(&quot;img/events/event5.jpg&quot;) center center / cover no-repeat;">
-                                    <span class="event__out">فروخته شده</span>
-                                    <span class="event__date">07 بهمن 1400</span>
-                                    <span class="event__time">10:00 بعد از ظهر</span>
-                                    <h3 class="event__title"><a href="event.html">لورم ایپسوم</a></h3>
-                                    <p class="event__address">لورم ایپسوم متن ساختگی با تولید سادگی نامفهوم از صنعت چاپ</p>
-                                </div>
-                            </div><div class="owl-item" style="width: 394.667px; margin-right: 30px;">
-                                <div class="event" data-bg="img/events/event6.jpg" style="background: url(&quot;img/events/event6.jpg&quot;) center center / cover no-repeat;">
-                                    <a href="#modal-ticket" class="event__ticket open-modal"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9,10a1,1,0,0,0-1,1v2a1,1,0,0,0,2,0V11A1,1,0,0,0,9,10Zm12,1a1,1,0,0,0,1-1V6a1,1,0,0,0-1-1H3A1,1,0,0,0,2,6v4a1,1,0,0,0,1,1,1,1,0,0,1,0,2,1,1,0,0,0-1,1v4a1,1,0,0,0,1,1H21a1,1,0,0,0,1-1V14a1,1,0,0,0-1-1,1,1,0,0,1,0-2ZM20,9.18a3,3,0,0,0,0,5.64V17H10a1,1,0,0,0-2,0H4V14.82A3,3,0,0,0,4,9.18V7H8a1,1,0,0,0,2,0H20Z"></path></svg>خرید بلیط</a>
-                                    <span class="event__date">07 بهمن 1400</span>
-                                    <span class="event__time">6:30 بعد از ظهر</span>
-                                    <h3 class="event__title"><a href="event.html">لورم ایپسوم</a></h3>
-                                    <p class="event__address">لورم ایپسوم متن ساختگی با تولید سادگی نامفهوم از صنعت چاپ</p>
-                                </div>
-                            </div><div class="owl-item cloned" style="width: 394.667px; margin-right: 30px;">
-                                <div class="event" data-bg="img/events/event1.jpg" style="background: url(&quot;img/events/event1.jpg&quot;) center center / cover no-repeat;">
-                                    <a href="#modal-ticket" class="event__ticket open-modal"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9,10a1,1,0,0,0-1,1v2a1,1,0,0,0,2,0V11A1,1,0,0,0,9,10Zm12,1a1,1,0,0,0,1-1V6a1,1,0,0,0-1-1H3A1,1,0,0,0,2,6v4a1,1,0,0,0,1,1,1,1,0,0,1,0,2,1,1,0,0,0-1,1v4a1,1,0,0,0,1,1H21a1,1,0,0,0,1-1V14a1,1,0,0,0-1-1,1,1,0,0,1,0-2ZM20,9.18a3,3,0,0,0,0,5.64V17H10a1,1,0,0,0-2,0H4V14.82A3,3,0,0,0,4,9.18V7H8a1,1,0,0,0,2,0H20Z"></path></svg>خرید بلیط</a>
-                                    <span class="event__date">07 بهمن 1400</span>
-                                    <span class="event__time">8:00 بعد از ظهر</span>
-                                    <h3 class="event__title"><a href="event.html">لورم ایپسوم</a></h3>
-                                    <p class="event__address">لورم ایپسوم متن ساختگی با تولید سادگی نامفهوم از صنعت چاپ</p>
-                                </div>
-                            </div><div class="owl-item cloned" style="width: 394.667px; margin-right: 30px;">
-                                <div class="event" data-bg="img/events/event2.jpg" style="background: url(&quot;img/events/event2.jpg&quot;) center center / cover no-repeat;">
-                                    <a href="#modal-ticket" class="event__ticket open-modal"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9,10a1,1,0,0,0-1,1v2a1,1,0,0,0,2,0V11A1,1,0,0,0,9,10Zm12,1a1,1,0,0,0,1-1V6a1,1,0,0,0-1-1H3A1,1,0,0,0,2,6v4a1,1,0,0,0,1,1,1,1,0,0,1,0,2,1,1,0,0,0-1,1v4a1,1,0,0,0,1,1H21a1,1,0,0,0,1-1V14a1,1,0,0,0-1-1,1,1,0,0,1,0-2ZM20,9.18a3,3,0,0,0,0,5.64V17H10a1,1,0,0,0-2,0H4V14.82A3,3,0,0,0,4,9.18V7H8a1,1,0,0,0,2,0H20Z"></path></svg>خرید بلیط</a>
-                                    <span class="event__date">07 بهمن 1400</span>
-                                    <span class="event__time">7:00 بعد از ظهر</span>
-                                    <h3 class="event__title"><a href="event.html">لورم ایپسوم</a></h3>
-                                    <p class="event__address">لورم ایپسوم متن ساختگی با تولید سادگی نامفهوم از صنعت چاپ</p>
-                                </div>
-                            </div><div class="owl-item cloned" style="width: 394.667px; margin-right: 30px;">
-                                <div class="event" data-bg="img/events/event3.jpg" style="background: url(&quot;img/events/event3.jpg&quot;) center center / cover no-repeat;">
-                                    <span class="event__out">فروخته شده</span>
-                                    <span class="event__date">07 بهمن 1399</span>
-                                    <span class="event__time">9:30 بعد از ظهر</span>
-                                    <h3 class="event__title"><a href="event.html">لورم ایپسوم</a></h3>
-                                    <p class="event__address">لورم ایپسوم متن ساختگی با تولید سادگی نامفهوم از صنعت چاپ</p>
-                                </div>
-                            </div>
-                        </div>
-                    </div><div class="owl-nav disabled"><button type="button" role="presentation" class="owl-prev"><span aria-label="Previous">‹</span></button><button type="button" role="presentation" class="owl-next"><span aria-label="Next">›</span></button></div><div class="owl-dots"><button role="button" class="owl-dot active"><span></span></button><button role="button" class="owl-dot"><span></span></button></div>
-                </div>
-
-                <button class="main__nav main__nav--prev" data-nav="#events" type="button"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M17,11H9.41l3.3-3.29a1,1,0,1,0-1.42-1.42l-5,5a1,1,0,0,0-.21.33,1,1,0,0,0,0,.76,1,1,0,0,0,.21.33l5,5a1,1,0,0,0,1.42,0,1,1,0,0,0,0-1.42L9.41,13H17a1,1,0,0,0,0-2Z"></path></svg></button>
-                <button class="main__nav main__nav--next" data-nav="#events" type="button"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M17.92,11.62a1,1,0,0,0-.21-.33l-5-5a1,1,0,0,0-1.42,1.42L14.59,11H7a1,1,0,0,0,0,2h7.59l-3.3,3.29a1,1,0,0,0,0,1.42,1,1,0,0,0,1.42,0l5-5a1,1,0,0,0,.21-.33A1,1,0,0,0,17.92,11.62Z"></path></svg></button>
-            </div>
-        </div>
-    </section>
-    <!-- end events -->
 </div>
+
+
+@*serach JS*@
+<script>
+    function Search() {
+        var input, filter, DivParent, h3, a, i, txtValue;
+        input = document.getElementById("myInput");
+        filter = input.value.toUpperCase();
+        DivParent = document.getElementById("DivArtist");
+        h3 = DivParent.getElementsByTagName("h3");
+        for (i = 0; i < h3.length; i++) {
+            a = h3[i];
+            txtValue = a.textContent || a.innerText;
+            if (txtValue.toUpperCase().indexOf(filter) > -1) {
+                h3[i].parentElement.parentElement.style.display = "";
+            } else {
+                h3[i].parentElement.parentElement.style.display = "none";
+            }
+        }
+    }
+</script>
+
+@*//new Artist*@
+
+<script>
+        function newestArtist() {
+            $.post("/Music/NewArtistFilter", {}, value => {
+            console.log();
+                $("#DivArtist").html("");
+                value.forEach(z => {
+                    var ImgPath = z.imagePath;
+                    if (ImgPath != null) {
+                        $("#DivArtist").append
+                            (`
+                      <div class="col-6 col-sm-4 col-md-3 col-xl-2">
+                         <a href="@Url.Action("ArtistPage","Music")/${z.id}" class="artist">
+                            <div class="artist__cover">
+                                    <img src="/ArtistFile/${z.imagePath}" alt="">
+                            </div>
+                            <h3 class="artist__title">${z.artistName}</h3>
+                        </a>
+                    </div>
+
+                         `)
+                    } else {
+                        $("#DivArtist").append
+                            (`
+                      <div class="col-6 col-sm-4 col-md-3 col-xl-2">
+                         <a href="@Url.Action("ArtistPage","Music")/${z.id}" class="artist">
+                            <div class="artist__cover">
+                                      <img src="/Template/img/artists/artist1.jpg" alt="">
+                            </div>
+                            <h3 class="artist__title">${z.artistName}</h3>
+                        </a>
+                    </div>
+
+                         `)
+                    }
+            })
+
+        })
+        }
+</script>
